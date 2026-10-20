@@ -5,7 +5,6 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Apple_Silicon_(ARM64)-007ACC?style=flat-square)](https://apple.com)
 [![Android Version](https://img.shields.io/badge/Android-16_(ARM64)-3DDC84?style=flat-square&logo=android&logoColor=white)](https://developer.android.com)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-15%2F15_Passed-success?style=flat-square)](#-পূর্ণাঙ্গ-acceptance-tests-ফলাফল-1515-passed)
 
 **[English Documentation](README.md)** | **[বাংলা সংস্করণ](README_BN.md)**
 
@@ -160,25 +159,13 @@ swift build -c release
 
 ---
 
-## 🧪 পূর্ণাঙ্গ Acceptance Tests ফলাফল (15/15 Passed)
+## 🧪 টেস্টিং (Testing)
 
-| # | পরীক্ষার নাম | ফলাফল | বিস্তারিত |
-|---|-------------|:------:|----------|
-| 1 | **Android Boot** | **PASSED** | Apple Silicon HVF এক্সিলারেশনে সম্পূর্ণ বুট সম্পন্ন হয়েছে। |
-| 2 | **Full-Screen Tablet** | **PASSED** | 2560×1600 রেজল্যুশন এবং `showDeviceFrame=no` নিশ্চিত করা হয়েছে। |
-| 3 | **Real Operating System** | **PASSED** | আসল Android 16 ও Pixel Tablet লঞ্চার সক্রিয়। |
-| 4 | **Google Play Store** | **PASSED** | `com.android.vending` এবং GMS সক্রিয় ও সাইন-ইনের জন্য প্রস্তুত। |
-| 5 | **App Installation** | **PASSED** | Play Store মার্কেট ইন্টেন্ট সফলভাবে চালু হয়েছে। |
-| 6 | **APK Installation** | **PASSED** | ADB প্যাকেজ ইনস্টলার পাথ ভ্যালিডেশন সফল। |
-| 7 | **Input Handling** | **PASSED** | কীবোর্ড ফরোয়ার্ডিং, ব্যাক, হোম এবং স্ক্রিন রোটেশন সফল। |
-| 8 | **Data Persistence** | **PASSED** | ইউজার ডাটা এবং গ্লোবাল সেটিংস অক্ষত সংরক্ষিত রয়েছে। |
-| 9 | **Bidirectional Clipboard** | **PASSED** | দ্বিমুখী ক্লিপবোর্ড ডেটা ইন্টারফেস সফলভাবে যাচাইকৃত। |
-| 10 | **File & Media Transfer** | **PASSED** | `/sdcard/Download`-এ ফাইল পুশ ও ইনডেক্সিং সফল। |
-| 11 | **Interactive Touch & Keymapper** | **PASSED** | ইন-অ্যাপ টাচ, সোয়াইপ ও গেমপ্যাড কীইভেন্ট সফল। |
-| 12 | **Snapshot Protocol** | **PASSED** | এমুলেটর স্ন্যাপশট সাবসিস্টেম সক্রিয় ও প্রস্তুত। |
-| 13 | **Instance Discovery** | **PASSED** | মাল্টি-AVD প্রোফাইল ডিরেক্টরি ও মেটাডাটা ভেরিফাইড। |
-| 14 | **Graceful Shutdown** | **PASSED** | `adb emu kill`-এর মাধ্যমে কোনো ব্যাকগ্রাউন্ড প্রসেস না রেখে পরিচ্ছন্ন শাটডাউন। |
-| 15 | **Error Handling & Diagnostics** | **PASSED** | অনুপস্থিত ফাইল বা আর্কিটেকচার মিসম্যাচ শনাক্তকরণ সক্রিয়। |
+ম্যাকে লোকাল ইন্টিগ্রেশন টেস্ট রান করার জন্য:
+
+```bash
+./scripts/test_suite.sh
+```
 
 ---
 

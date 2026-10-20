@@ -14,7 +14,6 @@
   <a href="https://apple.com"><img src="https://img.shields.io/badge/Architecture-Apple_Silicon_(ARM64)-007ACC?style=flat-square" alt="Apple Silicon ARM64"></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-16_(ARM64)-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android 16"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License"></a>
-  <a href="#-acceptance-test-suite-1515-passed"><img src="https://img.shields.io/badge/Tests-15%2F15_Passed-success?style=flat-square" alt="15/15 Tests Passed"></a>
   <a href="https://github.com/sabbirmohammad/AndroMac/actions"><img src="https://img.shields.io/badge/CI-Passing-brightgreen?style=flat-square&logo=githubactions&logoColor=white" alt="CI Status"></a>
 </p>
 
@@ -172,27 +171,13 @@ swift build -c release
 
 ---
 
-## 🧪 Acceptance Test Suite (15/15 Passed)
+## 🧪 Testing
 
-Every build is verified against 15 automated integration tests:
+To run the automated integration test suite locally on your Mac:
 
-| # | Test Case | Status | Details |
-|---|:---|:---:|:---|
-| 1 | **Android Boot** | **PASSED** | Boot completion verified via `sys.boot_completed=1` under HVF. |
-| 2 | **Full-Screen Tablet** | **PASSED** | 2560×1600 framebuffer verified with `showDeviceFrame=no`. |
-| 3 | **Real OS UI** | **PASSED** | Verified genuine Pixel Tablet launcher (`nexuslauncher`). |
-| 4 | **Google Play Store** | **PASSED** | Active Google Play Services (`com.android.vending`). |
-| 5 | **App Intent Execution** | **PASSED** | Play Store market scheme intent handled cleanly. |
-| 6 | **APK Installation** | **PASSED** | ADB package installer diagnostic pipeline verified. |
-| 7 | **Input Handling** | **PASSED** | Mac keyboard forwarding, navigation keyevents validated. |
-| 8 | **Data Persistence** | **PASSED** | User configuration preserved across emulator sessions. |
-| 9 | **Clipboard Integration** | **PASSED** | Bidirectional clipboard sync interface operational. |
-| 10 | **File Transfer** | **PASSED** | File push to `/sdcard/Download` and media scanner verified. |
-| 11 | **Interactive Touch** | **PASSED** | In-app mouse tap, swipe, and game controller events verified. |
-| 12 | **Snapshot Protocol** | **PASSED** | Sub-2s QEMU RAM state capture and load verified. |
-| 13 | **Instance Discovery** | **PASSED** | Multi-AVD spec parser and directory discovery operational. |
-| 14 | **Graceful Shutdown** | **PASSED** | Clean termination via `adb emu kill` without orphan processes. |
-| 15 | **Error Diagnostics** | **PASSED** | Invalid paths and architecture mismatches diagnosed accurately. |
+```bash
+./scripts/test_suite.sh
+```
 
 ---
 
