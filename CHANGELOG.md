@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.0] - 2026-10-21
 
 ### Added
+- **Official macOS App Icon Design**: Introduced professional, Apple HIG-compliant macOS squircle icon featuring the iconic fusion of the Apple silhouette and Android robot with native multi-resolution retina assets (16×16 up to 1024×1024).
 - **Native 120Hz Window Quick Switcher**: One-click action on Dashboard to focus and activate the Metal-accelerated Google Emulator window for full 60–120 FPS ProMotion gaming and zero input lag.
 - **Tab Lifecycle Management**: Intelligent pausing and resuming of live preview captures and telemetry when switching between views.
 - **Whole Module Optimization (WMO)**: Release compilation with `-whole-module-optimization` and automated debug symbol stripping (`strip -u -r`) for smaller binary footprint and instantaneous launch speed.
