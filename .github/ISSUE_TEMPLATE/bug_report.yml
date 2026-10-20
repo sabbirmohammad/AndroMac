@@ -1,0 +1,56 @@
+name: "🐛 Bug Report"
+description: File a bug report to help us improve AndroMac
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible.
+  - type: input
+    id: mac-model
+    attributes:
+      label: Mac Model & Chip
+      description: e.g. MacBook Pro 14" (M3 Pro, 18GB RAM)
+      placeholder: e.g. MacBook Air M2 16GB
+    validations:
+      required: true
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS Version
+      description: e.g. macOS 15.0 Sequoia or macOS 14.4 Sonoma
+      placeholder: e.g. macOS 15.0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this behavior?
+      placeholder: |
+        1. Open AndroMac
+        2. Click 'Launch Tablet'
+        3. Observe crash/error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Console Output
+      description: Paste any error messages, terminal logs, or ADB outputs here.
+      render: shell

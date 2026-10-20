@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Verify macOS App
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Show Xcode & Swift Version
+        run: |
+          xcodebuild -version || true
+          swift --version
+
+      - name: Build Swift Package (Release)
+        run: |
+          swift build -c release
+
+      - name: Package macOS App Bundle
+        run: |
+          chmod +x scripts/build_app.sh
+          ./scripts/build_app.sh
+
+      - name: Validate App Bundle Structure
+        run: |
+          test -f build/AndroMac.app/Contents/MacOS/AndroMac
+          test -f build/AndroMac.app/Contents/Info.plist
+          codesign --verify --deep --strict build/AndroMac.app
+          echo "App bundle validation passed!"

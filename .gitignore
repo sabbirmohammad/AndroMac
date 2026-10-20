@@ -1,0 +1,36 @@
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Swift Package Manager & Xcode
+/.build/
+/Packages/
+xcuserdata/
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+*.xcuserdatad
+.swiftpm/configuration/registries.json
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.netrc
+
+# Local Build Artifacts & Binaries
+/build/
+*.app
+*.dmg
+*.ipa
+*.dSYM/
+*.o
+*.a
+
+# Temporary & Log Files
+/tmp/
+*.log
+
+# Sensitive Environment Configurations
+.env
+.env.local
