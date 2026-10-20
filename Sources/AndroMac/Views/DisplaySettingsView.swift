@@ -117,6 +117,35 @@ public struct DisplaySettingsView: View {
                                 }
                             }
                             .toggleStyle(.switch)
+
+                            Divider()
+
+                            Toggle(isOn: Binding(
+                                get: { viewModel.config.autoFullScreen },
+                                set: {
+                                    viewModel.config.autoFullScreen = $0
+                                    viewModel.config.save()
+                                }
+                            )) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Auto Full-Screen on Launch (Removes Side Controller)")
+                                        .font(.system(size: 13, weight: .medium))
+                                    Text("Automatically expands to borderless full-screen, eliminating the floating side toolbar.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .toggleStyle(.switch)
+
+                            HStack(alignment: .top, spacing: 8) {
+                                Image(systemName: "info.circle.fill")
+                                    .foregroundColor(.accentColor)
+                                    .font(.system(size: 13))
+                                Text("Pro Tip: To collapse the floating side controller in windowed mode, click the '-' (minimize) icon at the top-right of the side toolbar, or press Ctrl+Cmd+F.")
+                                    .font(.system(size: 11))
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.top, 4)
                         }
                         .padding()
                         .background(Color(NSColor.controlBackgroundColor))

@@ -63,7 +63,24 @@ public struct DeviceControlsView: View {
                         ) {
                             viewModel.sendRecents()
                         }
+                        ControlButton(
+                            title: "Clean Full-Screen",
+                            icon: "arrow.up.left.and.arrow.down.right",
+                            color: .green
+                        ) {
+                            viewModel.toggleFullScreen()
+                        }
                     }
+
+                    HStack(spacing: 6) {
+                        Image(systemName: "info.circle")
+                            .foregroundColor(.secondary)
+                            .font(.system(size: 11))
+                        Text("To collapse the Google Emulator floating sidebar, click '-' (minimize) at the top of that bar, or use Clean Full-Screen.")
+                            .font(.system(size: 11))
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 2)
                 }
                 .disabled(!viewModel.state.isRunning)
 

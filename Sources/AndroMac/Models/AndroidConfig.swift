@@ -90,6 +90,7 @@ public struct TabletConfig: Codable, Equatable, Sendable {
     public var coldBoot: Bool
     public var bootAnim: Bool
     public var keycodeForwarding: Bool
+    public var autoFullScreen: Bool
 
     public init(
         avdName: String = "AndroMac_Laptop",
@@ -111,7 +112,8 @@ public struct TabletConfig: Codable, Equatable, Sendable {
         gpuMode: String = "auto",
         coldBoot: Bool = false,
         bootAnim: Bool = false,
-        keycodeForwarding: Bool = true
+        keycodeForwarding: Bool = true,
+        autoFullScreen: Bool = false
     ) {
         self.avdName = avdName
         self.displayName = displayName
@@ -133,6 +135,7 @@ public struct TabletConfig: Codable, Equatable, Sendable {
         self.coldBoot = coldBoot
         self.bootAnim = bootAnim
         self.keycodeForwarding = keycodeForwarding
+        self.autoFullScreen = autoFullScreen
     }
 
     public static let `default` = TabletConfig()
@@ -140,7 +143,7 @@ public struct TabletConfig: Codable, Equatable, Sendable {
     enum CodingKeys: String, CodingKey {
         case avdName, displayName, deviceMode, enableFreeformWindows, enableDesktopMode, forceResizableActivities
         case width, height, density, ramMB, cpuCores, storageGB, heapSizeMB, orientation
-        case showDeviceFrame, playStoreEnabled, gpuMode, coldBoot, bootAnim, keycodeForwarding
+        case showDeviceFrame, playStoreEnabled, gpuMode, coldBoot, bootAnim, keycodeForwarding, autoFullScreen
     }
 
     public init(from decoder: Decoder) throws {
@@ -165,6 +168,7 @@ public struct TabletConfig: Codable, Equatable, Sendable {
         self.coldBoot = try container.decodeIfPresent(Bool.self, forKey: .coldBoot) ?? false
         self.bootAnim = try container.decodeIfPresent(Bool.self, forKey: .bootAnim) ?? false
         self.keycodeForwarding = try container.decodeIfPresent(Bool.self, forKey: .keycodeForwarding) ?? true
+        self.autoFullScreen = try container.decodeIfPresent(Bool.self, forKey: .autoFullScreen) ?? false
     }
 
     public static func load() -> TabletConfig {

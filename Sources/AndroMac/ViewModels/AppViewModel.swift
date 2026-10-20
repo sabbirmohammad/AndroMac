@@ -171,7 +171,11 @@ public final class AppViewModel: ObservableObject {
                         if self.isClipboardSyncEnabled, let s = EmulatorProcessManager.shared.activeSerial {
                             ClipboardSyncService.shared.startSync(adbPath: adb, serial: s)
                         }
-                        FullScreenCoordinator.shared.focusEmulatorWindow()
+                        if self.config.autoFullScreen {
+                            FullScreenCoordinator.shared.toggleFullScreen()
+                        } else {
+                            FullScreenCoordinator.shared.focusEmulatorWindow()
+                        }
                     } else if case .stopped = newState {
                         self.stopMetricsPolling()
                         self.stopLiveStream()
