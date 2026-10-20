@@ -19,7 +19,7 @@ public struct DeviceControlsView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.orange)
-                        Text("Android Tablet is currently offline. Start the tablet to send controls.")
+                        Text("Android is currently offline. Start Android to send controls.")
                             .font(.system(size: 12))
                     }
                     .padding()
@@ -27,6 +27,45 @@ public struct DeviceControlsView: View {
                     .background(Color.orange.opacity(0.1))
                     .cornerRadius(8)
                 }
+
+                // Laptop & Multi-Window Mode Controls
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Laptop & Multi-Window Management")
+                            .font(.system(size: 14, weight: .semibold))
+                        Spacer()
+                        Text(viewModel.config.deviceMode == .laptop ? "Desktop Mode Active" : "Tablet Mode Active")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(viewModel.config.deviceMode == .laptop ? .accentColor : .secondary)
+                    }
+
+                    HStack(spacing: 14) {
+                        ControlButton(
+                            title: viewModel.config.deviceMode == .laptop ? "Switch to Tablet" : "Switch to Laptop",
+                            icon: viewModel.config.deviceMode == .laptop ? "ipad.landscape" : "laptopcomputer",
+                            color: .orange
+                        ) {
+                            viewModel.setDeviceMode(viewModel.config.deviceMode == .laptop ? .tablet : .laptop)
+                        }
+
+                        ControlButton(
+                            title: "Enable Freeform Windows",
+                            icon: "uiwindow.split.2x1",
+                            color: .indigo
+                        ) {
+                            viewModel.toggleDesktopMode(enabled: true)
+                        }
+
+                        ControlButton(
+                            title: "Taskbar / App Switcher",
+                            icon: "macwindow.on.rectangle",
+                            color: .purple
+                        ) {
+                            viewModel.sendRecents()
+                        }
+                    }
+                }
+                .disabled(!viewModel.state.isRunning)
 
                 // Android Navigation Bar
                 VStack(alignment: .leading, spacing: 12) {

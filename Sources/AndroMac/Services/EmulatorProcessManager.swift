@@ -123,6 +123,12 @@ public final class EmulatorProcessManager: @unchecked Sendable {
 
         self.activeSerial = serial
         appendLog("Device fully booted: \(serial)")
+
+        if config.deviceMode == .laptop || config.enableDesktopMode || config.enableFreeformWindows {
+            appendLog("Configuring Android Laptop/Desktop Mode (Freeform multi-windowing & resizable activities)...")
+            try? await ADBService.shared.applyDesktopMode(adbPath: adbPath, serial: serial, enable: true)
+        }
+
         await MainActor.run { onStateChange(.running) }
     }
 

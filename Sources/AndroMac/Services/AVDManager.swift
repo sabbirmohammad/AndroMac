@@ -10,10 +10,19 @@ public final class AVDManager: Sendable {
         return "\(home)/.android/avd"
     }
 
-    public func doesAVDExist(named name: String = "AndroMac_Tablet") -> Bool {
+    public func doesAVDExist(named name: String = "AndroMac_Laptop") -> Bool {
         let iniFile = "\(avdHomeDirectory)/\(name).ini"
         let avdDir = "\(avdHomeDirectory)/\(name).avd"
-        return FileManager.default.fileExists(atPath: iniFile) && FileManager.default.fileExists(atPath: avdDir)
+        if FileManager.default.fileExists(atPath: iniFile) && FileManager.default.fileExists(atPath: avdDir) {
+            return true
+        }
+        // Fallback check for legacy AndroMac_Tablet AVD
+        if name == "AndroMac_Laptop" {
+            let legacyIni = "\(avdHomeDirectory)/AndroMac_Tablet.ini"
+            let legacyDir = "\(avdHomeDirectory)/AndroMac_Tablet.avd"
+            return FileManager.default.fileExists(atPath: legacyIni) && FileManager.default.fileExists(atPath: legacyDir)
+        }
+        return false
     }
 
     public func configureAVD(config: TabletConfig, systemImagePackage: String? = nil, report: EnvironmentReport) throws {
@@ -55,6 +64,9 @@ public final class AVDManager: Sendable {
         """
         try iniContent.write(toFile: iniFile, atomically: true, encoding: .utf8)
 
+        let isLaptop = (config.deviceMode == .laptop)
+        let deviceName = isLaptop ? "desktop" : "pixel_tablet"
+
         let configIniContent = """
         PlayStore.enabled=\(config.playStoreEnabled ? "true" : "false")
         abi.type=arm64-v8a
@@ -79,7 +91,7 @@ public final class AVDManager: Sendable {
         hw.cpu.arch=arm64
         hw.cpu.ncore=\(config.cpuCores)
         hw.device.manufacturer=Google
-        hw.device.name=pixel_tablet
+        hw.device.name=\(deviceName)
         hw.gps=no
         hw.gpu.enabled=yes
         hw.gpu.mode=\(config.gpuMode == "auto" ? "host" : config.gpuMode)
@@ -87,6 +99,7 @@ public final class AVDManager: Sendable {
         hw.keyboard=yes
         hw.keyboard.charmap=qwerty2
         hw.keyboard.lid=yes
+        hw.mouse=yes
         hw.lcd.density=\(config.density)
         hw.lcd.height=\(config.height)
         hw.lcd.width=\(config.width)
@@ -94,6 +107,7 @@ public final class AVDManager: Sendable {
         hw.ramSize=\(config.ramMB)
         hw.sdCard=yes
         hw.sensors.orientation=no
+        hw.touchScreen=yes
         image.sysdir.1=\(sysdirRel)
         runtime.network.latency=none
         runtime.network.speed=full
@@ -111,7 +125,7 @@ public final class AVDManager: Sendable {
         try configIniContent.write(toFile: configIniPath, atomically: true, encoding: .utf8)
     }
 
-    public func wipeData(avdName: String = "AndroMac_Tablet") throws {
+    public func wipeData(avdName: String = "AndroMac_Laptop") throws {
         let avdDir = "\(avdHomeDirectory)/\(avdName).avd"
         let fm = FileManager.default
         let itemsToDelete = [

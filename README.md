@@ -2,10 +2,10 @@
   <img src="docs/assets/icon.png" width="128" height="128" alt="AndroMac Icon">
 </p>
 
-<h1 align="center">AndroMac 🍏📱</h1>
+<h1 align="center">AndroMac 🍏💻📱</h1>
 
 <p align="center">
-  <b>High-Performance Native Android 16 Tablet Environment & Launcher for Apple Silicon Macs</b>
+  <b>High-Performance Native Android 16 Laptop, Desktop & Tablet Environment for Apple Silicon Macs</b>
 </p>
 
 <p align="center">
@@ -25,9 +25,9 @@
 
 ## 📖 Overview
 
-**AndroMac** is an open-source, ultra-fast, native macOS desktop launcher and tablet virtualization orchestrator engineered specifically for **Apple Silicon Macs** (M1, M2, M3, M4, and newer).
+**AndroMac** is an open-source, ultra-fast, native macOS desktop launcher and virtualization orchestrator engineered specifically for **Apple Silicon Macs** (M1, M2, M3, M4, and newer).
 
-Unlike web-based mockups or phone-framed wrappers, AndroMac directly leverages Apple's **Hypervisor.framework (HVF)**, Metal-accelerated host GPU rendering, and official Google ARM64 system images to deliver an uncompromising, **2560 × 1600 (16:10)** landscape Android tablet experience.
+Unlike web-based mockups or phone-framed wrappers, AndroMac directly leverages Apple's **Hypervisor.framework (HVF)**, Metal-accelerated host GPU rendering, and official Google ARM64 system images to deliver an uncompromising **Android 16 Laptop & Desktop Environment** (with Freeform multi-windowing, desktop taskbar, and resizable apps) alongside a full **2560 × 1600 (16:10)** landscape Android tablet experience.
 
 <p align="center">
   <img src="docs/assets/screenshot.png" width="92%" alt="AndroMac Screenshot">
@@ -37,8 +37,10 @@ Unlike web-based mockups or phone-framed wrappers, AndroMac directly leverages A
 
 ## ✨ Key Features
 
-- 🖥️ **Native 16:10 Aspect Ratio**: Tailored specifically for MacBook and Apple display geometry (**2560 × 1600 @ 280 DPI**) with genuine Android Tablet UI (dual-pane notification shade, tablet taskbar, split-screen multitasking).
-- 📺 **In-App Interactive Live View**: View and control the Android tablet directly inside the launcher window via interactive mouse click (Tap) and drag (Swipe) streaming.
+- 💻 **Laptop / Desktop Mode (Mac Optimized)**: Run Android apps in resizable, floating freeform windows with desktop taskbar, window controls, and native mouse/keyboard focus.
+- 📱 **Dual Mode Architecture**: Seamlessly switch between **Laptop / Desktop Mode** (multi-window productivity) and **Tablet Mode** (full-screen immersive landscape).
+- 🖥️ **Native 16:10 Aspect Ratio**: Tailored specifically for MacBook and Apple display geometry (**2560 × 1600 @ 240/280 DPI**) with genuine Android taskbar and multi-app multitasking.
+- 📺 **In-App Interactive Live View**: View and control the Android environment directly inside the launcher window via interactive mouse click (Tap) and drag (Swipe) streaming.
 - 🔲 **Zero-Bezel Frameless Display**: Eliminates all synthetic mobile phone skins (`showDeviceFrame=no`) for maximum usable screen real estate.
 - 🛍️ **Pre-Configured Google Play Store**: Powered by official ARM64 system images with genuine Google Play Store and Google Play Services (`com.android.vending`) ready out-of-the-box.
 - 📋 **Bidirectional Clipboard Sync**: Seamlessly sync copied text between macOS and Android clipboard in real time.

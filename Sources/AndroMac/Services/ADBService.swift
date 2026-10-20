@@ -251,6 +251,34 @@ public final class ADBService: Sendable {
         _ = try await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "monkey", "-p", packageName, "-c", "android.intent.category.LAUNCHER", "1"])
     }
 
+    public func launchAppInFreeform(adbPath: String, serial: String, packageName: String) async throws {
+        // Launch app explicitly in freeform windowing mode (Windowing mode 5 = WINDOWING_MODE_FREEFORM)
+        do {
+            _ = try await executeCommand(adbPath: adbPath, serial: serial, arguments: [
+                "shell", "am", "start", "--windowingMode", "5",
+                "-a", "android.intent.action.MAIN",
+                "-c", "android.intent.category.LAUNCHER",
+                "-p", packageName
+            ])
+        } catch {
+            // Fallback to standard launcher if windowingMode flag is rejected by older shell
+            try await launchApp(adbPath: adbPath, serial: serial, packageName: packageName)
+        }
+    }
+
+    public func applyDesktopMode(adbPath: String, serial: String, enable: Bool) async throws {
+        let val = enable ? "1" : "0"
+        // 1. Freeform window management support
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "settings", "put", "global", "enable_freeform_support", val])
+        // 2. Force all apps to be resizable in freeform/multi-window
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "settings", "put", "global", "force_resizable_activities", val])
+        // 3. Android Desktop Mode properties (Android 10 - 16)
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "setprop", "persist.wm.debug.desktop_mode", val])
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "setprop", "persist.wm.debug.desktop_mode_compat_ui", val])
+        // 4. Secure freeform window management
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "settings", "put", "secure", "freeform_window_management", val])
+    }
+
     public func uninstallApp(adbPath: String, serial: String, packageName: String) async throws {
         _ = try await executeCommand(adbPath: adbPath, serial: serial, arguments: ["uninstall", packageName])
     }

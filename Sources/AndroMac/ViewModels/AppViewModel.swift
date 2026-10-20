@@ -10,7 +10,7 @@ public enum NavigationTab: String, CaseIterable, Identifiable, Sendable {
     case gameKeymapper = "Game Keymapper"
     case snapshots = "Snapshots & Backup"
     case instances = "Instance Manager"
-    case displaySettings = "Tablet Settings"
+    case displaySettings = "Display & Device Mode"
     case setupWizard = "Setup Wizard"
     case logs = "Logs & Diagnostics"
 
@@ -18,7 +18,7 @@ public enum NavigationTab: String, CaseIterable, Identifiable, Sendable {
 
     public var icon: String {
         switch self {
-        case .dashboard: return "ipad.landscape"
+        case .dashboard: return "laptopcomputer"
         case .fileSharing: return "folder.fill"
         case .apkInstaller: return "arrow.down.doc.fill"
         case .controls: return "dpad.fill"
@@ -664,11 +664,49 @@ public final class AppViewModel: ObservableObject {
         }
     }
 
-    public func launchApp(packageName: String) {
+    public func launchApp(packageName: String, inFreeform: Bool = false) {
         guard let adb = report.adbPath, let serial = EmulatorProcessManager.shared.activeSerial else { return }
         Task {
-            try? await ADBService.shared.launchApp(adbPath: adb, serial: serial, packageName: packageName)
+            if inFreeform || config.deviceMode == .laptop {
+                try? await ADBService.shared.launchAppInFreeform(adbPath: adb, serial: serial, packageName: packageName)
+            } else {
+                try? await ADBService.shared.launchApp(adbPath: adb, serial: serial, packageName: packageName)
+            }
             FullScreenCoordinator.shared.focusEmulatorWindow()
+        }
+    }
+
+    public func setDeviceMode(_ mode: DeviceMode) {
+        config.deviceMode = mode
+        if mode == .laptop {
+            config.enableFreeformWindows = true
+            config.enableDesktopMode = true
+            config.forceResizableActivities = true
+            config.density = 240
+        }
+        config.save()
+        applyConfigAndReconfigure(notify: false)
+        if let adb = report.adbPath, let serial = EmulatorProcessManager.shared.activeSerial, state.isRunning {
+            Task {
+                try? await ADBService.shared.applyDesktopMode(adbPath: adb, serial: serial, enable: mode == .laptop)
+                self.refreshMetrics()
+                self.showAlertMessage("Switched to \(mode.shortName). Freeform multi-window mode is now \(mode == .laptop ? "enabled" : "disabled").")
+            }
+        } else {
+            showAlertMessage("Switched to \(mode.shortName). Start Android to experience the new environment.")
+        }
+    }
+
+    public func toggleDesktopMode(enabled: Bool) {
+        config.enableDesktopMode = enabled
+        config.enableFreeformWindows = enabled
+        config.save()
+        if let adb = report.adbPath, let serial = EmulatorProcessManager.shared.activeSerial, state.isRunning {
+            Task {
+                try? await ADBService.shared.applyDesktopMode(adbPath: adb, serial: serial, enable: enabled)
+                self.refreshMetrics()
+                self.showAlertMessage("Laptop Desktop Mode \(enabled ? "enabled" : "disabled") in active session.")
+            }
         }
     }
 
@@ -789,13 +827,18 @@ public final class AppViewModel: ObservableObject {
         }
     }
 
-    public func applyConfigAndReconfigure() {
+    public func applyConfigAndReconfigure(notify: Bool = true) {
         config.save()
         do {
             try AVDManager.shared.configureAVD(config: config, report: report)
-            showAlertMessage("Tablet configuration saved! Restart Android Tablet to apply changes.")
+            if notify {
+                let modeStr = config.deviceMode == .laptop ? "Laptop" : "Tablet"
+                showAlertMessage("\(modeStr) configuration saved! Restart Android to apply hardware changes.")
+            }
         } catch {
-            showAlertMessage("Failed to update AVD: \(error.localizedDescription)")
+            if notify {
+                showAlertMessage("Failed to update AVD: \(error.localizedDescription)")
+            }
         }
     }
 

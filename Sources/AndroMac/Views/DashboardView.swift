@@ -11,17 +11,30 @@ public struct DashboardView: View {
                 HStack(alignment: .center) {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 8) {
-                            Text("AndroMac Tablet")
+                            Text(viewModel.config.deviceMode == .laptop ? "AndroMac Laptop" : "AndroMac Tablet")
                                 .font(.system(size: 24, weight: .bold))
                             StatusBadge(state: viewModel.state)
-                            Text("v1.2.0")
+                            HStack(spacing: 4) {
+                                Image(systemName: viewModel.config.deviceMode.icon)
+                                Text(viewModel.config.deviceMode.shortName)
+                            }
+                            .font(.system(size: 11, weight: .semibold))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.accentColor.opacity(0.15))
+                            .foregroundColor(.accentColor)
+                            .cornerRadius(4)
+
+                            Text("v1.3.0")
                                 .font(.system(size: 11, weight: .semibold))
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
                                 .background(Color.secondary.opacity(0.15))
                                 .cornerRadius(4)
                         }
-                        Text("Apple Silicon Full-Screen Android 16 Tablet Environment")
+                        Text(viewModel.config.deviceMode == .laptop
+                            ? "Apple Silicon High-Performance Android 16 Laptop & Desktop Environment"
+                            : "Apple Silicon Full-Screen Android 16 Tablet Environment")
                             .font(.system(size: 13))
                             .foregroundColor(.secondary)
                     }
@@ -72,7 +85,7 @@ public struct DashboardView: View {
                         } else {
                             ActionButton(
                                 title: "Start Android",
-                                subtitle: "Full Tablet",
+                                subtitle: viewModel.config.deviceMode == .laptop ? "Laptop Mode" : "Tablet Mode",
                                 icon: "play.fill",
                                 color: .green,
                                 isDisabled: viewModel.state.isTransitioning,
@@ -91,7 +104,7 @@ public struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         HStack(spacing: 8) {
-                            Text("Interactive Live Tablet View")
+                            Text(viewModel.config.deviceMode == .laptop ? "Interactive Live Laptop View" : "Interactive Live Tablet View")
                                 .font(.system(size: 15, weight: .bold))
                             if viewModel.isLiveStreaming {
                                 HStack(spacing: 4) {
@@ -191,13 +204,13 @@ public struct DashboardView: View {
                             }
                         } else {
                             VStack(spacing: 8) {
-                                Image(systemName: "ipad.landscape")
+                                Image(systemName: viewModel.config.deviceMode.icon)
                                     .font(.system(size: 48))
                                     .foregroundColor(.white.opacity(0.3))
-                                Text("Android Tablet is currently offline")
+                                Text("Android is currently offline")
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundColor(.white.opacity(0.7))
-                                Text("Click 'Start Android' to launch the 16:10 full-screen tablet environment")
+                                Text("Click 'Start Android' to launch the \(viewModel.config.deviceMode == .laptop ? "multi-window laptop" : "16:10 tablet") environment")
                                     .font(.system(size: 11))
                                     .foregroundColor(.white.opacity(0.4))
                             }

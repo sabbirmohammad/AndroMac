@@ -5,19 +5,128 @@ public struct DisplaySettingsView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 22) {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Tablet Display & Hardware Configuration")
+                    Text("Display & Device Mode Settings")
                         .font(.system(size: 20, weight: .bold))
-                    Text("Tune resolution, density, RAM, and hardware acceleration for your Apple Silicon Mac.")
+                    Text("Choose between Mac-optimized Laptop/Desktop Mode and Classic Tablet Mode, customize resolution, DPI, and virtual hardware.")
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
                 }
 
-                // Resolution Presets
+                // 1. Device Form Factor / Mode Selection
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Screen Resolution (Aspect Ratio 16:10)")
+                    HStack {
+                        Text("Operating Mode")
+                            .font(.system(size: 14, weight: .semibold))
+                        Spacer()
+                        Text("Current: \(viewModel.config.deviceMode.shortName)")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundColor(.secondary)
+                    }
+
+                    VStack(spacing: 10) {
+                        ForEach(DeviceMode.allCases, id: \.self) { mode in
+                            let isSelected = viewModel.config.deviceMode == mode
+                            HStack(alignment: .top, spacing: 14) {
+                                Image(systemName: mode.icon)
+                                    .font(.system(size: 22))
+                                    .foregroundColor(isSelected ? .accentColor : .secondary)
+                                    .frame(width: 30)
+
+                                VStack(alignment: .leading, spacing: 3) {
+                                    HStack {
+                                        Text(mode.displayName)
+                                            .font(.system(size: 13, weight: .semibold))
+                                        if mode == .laptop {
+                                            Text("Mac Optimized")
+                                                .font(.system(size: 10, weight: .bold))
+                                                .padding(.horizontal, 6)
+                                                .padding(.vertical, 2)
+                                                .background(Color.accentColor.opacity(0.15))
+                                                .foregroundColor(.accentColor)
+                                                .cornerRadius(4)
+                                        }
+                                    }
+                                    Text(mode.description)
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+
+                                Spacer()
+
+                                if isSelected {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.accentColor)
+                                }
+                            }
+                            .padding(12)
+                            .background(Color(NSColor.controlBackgroundColor))
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 1.5)
+                            )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                viewModel.setDeviceMode(mode)
+                            }
+                        }
+                    }
+                }
+
+                // 2. Laptop / Freeform Windowing Options (if Laptop Mode is active)
+                if viewModel.config.deviceMode == .laptop {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Laptop Multi-Windowing & Desktop Features")
+                            .font(.system(size: 14, weight: .semibold))
+
+                        VStack(spacing: 10) {
+                            Toggle(isOn: Binding(
+                                get: { viewModel.config.enableFreeformWindows },
+                                set: { viewModel.toggleDesktopMode(enabled: $0) }
+                            )) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Freeform Floating Multi-Windowing")
+                                        .font(.system(size: 13, weight: .medium))
+                                    Text("Allows opening multiple resizable Android apps simultaneously with window controls.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .toggleStyle(.switch)
+
+                            Divider()
+
+                            Toggle(isOn: Binding(
+                                get: { viewModel.config.forceResizableActivities },
+                                set: {
+                                    viewModel.config.forceResizableActivities = $0
+                                    viewModel.config.save()
+                                }
+                            )) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Force Resizable Activities")
+                                        .font(.system(size: 13, weight: .medium))
+                                    Text("Forces non-responsive phone apps to support floating and split window resizing.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .toggleStyle(.switch)
+                        }
+                        .padding()
+                        .background(Color(NSColor.controlBackgroundColor))
+                        .cornerRadius(10)
+                    }
+                }
+
+                // 3. Resolution Presets
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Screen Resolution")
                         .font(.system(size: 14, weight: .semibold))
 
                     VStack(spacing: 8) {
@@ -48,7 +157,7 @@ public struct DisplaySettingsView: View {
                     }
                 }
 
-                // Density (DPI) Selection
+                // 4. Density (DPI) Selection
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Screen Density (DPI Scale)")
                         .font(.system(size: 14, weight: .semibold))
@@ -80,7 +189,7 @@ public struct DisplaySettingsView: View {
                     }
                 }
 
-                // Performance & Virtual Hardware
+                // 5. Performance & Virtual Hardware
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Virtual Hardware Allocation")
                         .font(.system(size: 14, weight: .semibold))
@@ -139,7 +248,7 @@ public struct DisplaySettingsView: View {
                 // Actions: Save & Wipe Data
                 HStack(spacing: 12) {
                     Button("Save Configuration & Update AVD") {
-                        viewModel.applyConfigAndReconfigure()
+                        viewModel.applyConfigAndReconfigure(notify: true)
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.regular)
@@ -168,7 +277,7 @@ public struct DisplaySettingsView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This will delete all installed apps, settings, and user data on the Android Tablet. Official system files and Play Store will remain intact.")
+            Text("This will delete all installed apps, settings, and user data. Official system files and Play Store will remain intact.")
         }
     }
 }

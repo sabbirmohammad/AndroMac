@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-10-21
+
+### Added
+- **Android Laptop & Desktop Mode**: Introduced first-class Laptop / Desktop Mode with Android Freeform floating multi-windowing, desktop taskbar, resizable apps, and pointer/mouse integration.
+- **Dual Operating Mode Architecture**: Seamless live toggle between Laptop/Desktop Mode (multi-window productivity) and Classic Fullscreen Tablet Mode (touch/immersive).
+- **Freeform App Launcher**: Ability to launch any installed app directly into a floating resizable window from the APK & Apps manager.
+- **Hardware Mouse & Keyboard Integration**: Configured `hw.mouse=yes` and automatic provisioning of `force_resizable_activities`, `enable_freeform_support`, and Android 16 desktop mode system properties.
+
 ## [1.2.0] - 2026-10-21
 
 ### Added

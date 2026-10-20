@@ -148,10 +148,19 @@ public struct APKInstallerView: View {
                                     }
                                     Spacer()
 
-                                    Button("Launch") {
-                                        viewModel.launchApp(packageName: app.packageName)
+                                    Menu {
+                                        Button("Launch Floating Window (Freeform)") {
+                                            viewModel.launchApp(packageName: app.packageName, inFreeform: true)
+                                        }
+                                        Button("Launch Fullscreen") {
+                                            viewModel.launchApp(packageName: app.packageName, inFreeform: false)
+                                        }
+                                    } label: {
+                                        Text("Launch")
+                                    } primaryAction: {
+                                        viewModel.launchApp(packageName: app.packageName, inFreeform: viewModel.config.deviceMode == .laptop)
                                     }
-                                    .buttonStyle(.bordered)
+                                    .menuStyle(.borderedButton)
                                     .controlSize(.small)
 
                                     Button(role: .destructive) {

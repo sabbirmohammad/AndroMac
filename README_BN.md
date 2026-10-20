@@ -1,4 +1,4 @@
-# AndroMac 🍏📱 (v1.2.0)
+# AndroMac 🍏💻📱 (v1.2.0)
 
 [![Language](https://img.shields.io/badge/Language-Swift_6-F05138?style=flat-square&logo=swift&logoColor=white)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS_13%2B-000000?style=flat-square&logo=apple&logoColor=white)](https://apple.com)
@@ -13,23 +13,25 @@
 <p align="center">
   <img src="docs/assets/icon.png" width="128" height="128" alt="AndroMac Icon">
   <br>
-  <b>Apple Silicon Mac-এর জন্য তৈরি দ্রুততম, নেটিভ এবং ফুল-স্ক্রিন অ্যান্ড্রয়েড ট্যাবলেট পরিবেশ।</b>
+  <b>Apple Silicon Mac-এর জন্য তৈরি দ্রুততম, নেটিভ অ্যান্ড্রয়েড ল্যাপটপ, ডেস্কটপ ও ট্যাবলেট পরিবেশ।</b>
 </p>
 
 ---
 
-**AndroMac** হলো Apple Silicon Mac (M1, M2, M3, M4)-এর জন্য নির্মিত একটি নির্ভরযোগ্য, আধুনিক এবং পূর্ণাঙ্গ **Full-Screen Android Tablet Environment & Launcher**। এটি কোনো মোবাইল ফোনের ছোট উইন্ডো বা নকল ওয়েব মকআপ নয়; এটি সরাসরি Apple Silicon Hypervisor Framework (HVF) এবং অফিসিয়াল ARM64 Google Play সিস্টেম ইমেজের ওপর ভিত্তি করে চলা একটি বাস্তব **Android 16 Tablet**।
+**AndroMac** হলো Apple Silicon Mac (M1, M2, M3, M4)-এর জন্য নির্মিত একটি নির্ভরযোগ্য, আধুনিক এবং পূর্ণাঙ্গ **Android Laptop & Desktop Environment (Freeform Multi-Windowing) ও Tablet Launcher**। এটি কোনো মোবাইল ফোনের ছোট উইন্ডো বা নকল ওয়েব মকআপ নয়; এটি সরাসরি Apple Silicon Hypervisor Framework (HVF) এবং অফিসিয়াল ARM64 Google Play সিস্টেম ইমেজের ওপর ভিত্তি করে চলা একটি বাস্তব **Android 16** পরিবেশ।
 
 <p align="center">
-  <img src="docs/assets/screenshot.png" width="90%" alt="Android Tablet Environment">
+  <img src="docs/assets/screenshot.png" width="90%" alt="Android Environment">
 </p>
 
 ---
 
 ## 🌟 মূল বৈশিষ্ট্যসমূহ (Key Highlights)
 
-- **Native 16:10 Full-Screen Tablet:** ম্যাকবুকের ডিসপ্লের অনুপাত (16:10) অনুযায়ী **2560 × 1600** রেজল্যুশনে প্রকৃত Android Tablet ইন্টারফেস (Taskbar, Split-Screen, Dual-Pane Notification Shade)।
-- **ইন-অ্যাপ ইন্টারেক্টিভ লাইভ ভিউ (Interactive Live View):** লঞ্চারের ভেতর থেকেই সরাসরি লাইভ স্ক্রিন স্পর্শ (Tap) এবং সোয়াইপ (Swipe) করার সুবিধা — সম্পূর্ণ ইউনিফাইড সিঙ্গেল-উইন্ডো অভিজ্ঞতা।
+- 💻 **ল্যাপটপ / ডেস্কটপ মোড (Mac Optimized):** ম্যাকের মাউস ও কীবোর্ডের সুবিধার জন্য প্রতিটি অ্যান্ড্রয়েড অ্যাপকে রিসাইজযোগ্য ফ্লোটিং উইন্ডো (Freeform Windowing) আকারে চালানো, ডেস্কটপ টাস্কবার এবং উইন্ডো কনট্রোল ব্যবহারের সুবিধা।
+- 📱 **ডুয়াল মোড সাপোর্ট (Laptop vs Tablet):** প্রয়োজন অনুযায়ী এক ক্লিকেই **Laptop/Desktop Mode** এবং ক্লাসিক **Full-Screen Tablet Mode**-এর মধ্যে পরিবর্তনের সুযোগ।
+- 🖥️ **Native 16:10 Full-Screen Display:** ম্যাকবুকের ডিসপ্লের অনুপাত (16:10) অনুযায়ী **2560 × 1600** রেজল্যুশনে প্রকৃত মাল্টিটাস্কিং ইন্টারফেস (Taskbar, Split-Screen, Dual-Pane Notification Shade)।
+- 📺 **ইন-অ্যাপ ইন্টারেক্টিভ লাইভ ভিউ (Interactive Live View):** লঞ্চারের ভেতর থেকেই সরাসরি লাইভ স্ক্রিন স্পর্শ (Tap) এবং সোয়াইপ (Swipe) করার সুবিধা — সম্পূর্ণ ইউনিফাইড সিঙ্গেল-উইন্ডো অভিজ্ঞতা।
 - **জিরো ফোন ফ্রেম (Frameless Display):** মোবাইল ফোনের ফ্রেম বা কৃত্রিম বেজেল সম্পূর্ণ অপসারণ করা হয়েছে (`showDeviceFrame=no`)।
 - **অফিসিয়াল Google Play Store:** প্রাক-কনফিগার করা অফিসিয়াল ARM64 Play Store ও Google Play Services (`com.android.vending`) অন্তর্ভুক্ত।
 - **স্বয়ংক্রিয় দ্বিমুখী ক্লিপবোর্ড সিঙ্ক (Bidirectional Clipboard Sync):** ম্যাক অথবা অ্যান্ড্রয়েডের যেকোনো এক জায়গায় টেক্সট কপি করলে স্বয়ংক্রিয়ভাবে অপর ডিভাইসের ক্লিপবোর্ডে সিঙ্ক।

@@ -69,14 +69,15 @@ public final class SetupWizardViewModel: ObservableObject {
         }
 
         // Step 4: AVD
-        if AVDManager.shared.doesAVDExist(named: "AndroMac_Tablet") {
-            updateStep(id: "avd_configuration", status: .success, detail: "AndroMac_Tablet AVD configured (2560x1600 16:10, 280 DPI, Host GPU).")
+        let avdExists = AVDManager.shared.doesAVDExist(named: "AndroMac_Laptop") || AVDManager.shared.doesAVDExist(named: "AndroMac_Tablet")
+        if avdExists {
+            updateStep(id: "avd_configuration", status: .success, detail: "AndroMac AVD configured (16:10 Laptop & Tablet, Host GPU acceleration).")
         } else {
             updateStep(id: "avd_configuration", status: .pending, detail: "Ready to configure automatically.")
         }
 
         // Step 5: Play Store
-        if rep.hasGooglePlayArm64Image && AVDManager.shared.doesAVDExist(named: "AndroMac_Tablet") {
+        if rep.hasGooglePlayArm64Image && avdExists {
             updateStep(id: "play_store_ready", status: .success, detail: "Google Play Store enabled. Sign in with your Google Account inside Android.")
         } else {
             updateStep(id: "play_store_ready", status: .pending, detail: nil)
