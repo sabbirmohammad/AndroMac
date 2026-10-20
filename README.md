@@ -14,7 +14,7 @@
   <a href="https://apple.com"><img src="https://img.shields.io/badge/Architecture-Apple_Silicon_(ARM64)-007ACC?style=flat-square" alt="Apple Silicon ARM64"></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-16_(ARM64)-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android 16"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License"></a>
-  <a href="TEST_REPORT.md"><img src="https://img.shields.io/badge/Tests-15%2F15_Passed-success?style=flat-square" alt="15/15 Tests Passed"></a>
+  <a href="#-acceptance-test-suite-1515-passed"><img src="https://img.shields.io/badge/Tests-15%2F15_Passed-success?style=flat-square" alt="15/15 Tests Passed"></a>
   <a href="https://github.com/sabbirmohammad/AndroMac/actions"><img src="https://img.shields.io/badge/CI-Passing-brightgreen?style=flat-square&logo=githubactions&logoColor=white" alt="CI Status"></a>
 </p>
 
@@ -193,8 +193,6 @@ Every build is verified against 15 automated integration tests:
 | 13 | **Instance Discovery** | **PASSED** | Multi-AVD spec parser and directory discovery operational. |
 | 14 | **Graceful Shutdown** | **PASSED** | Clean termination via `adb emu kill` without orphan processes. |
 | 15 | **Error Diagnostics** | **PASSED** | Invalid paths and architecture mismatches diagnosed accurately. |
-
-Full report available in [TEST_REPORT.md](TEST_REPORT.md).
 
 ---
 

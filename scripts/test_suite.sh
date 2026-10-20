@@ -6,7 +6,7 @@ SDK_DIR="$HOME/Library/Android/sdk"
 ADB="$SDK_DIR/platform-tools/adb"
 EMULATOR="$SDK_DIR/emulator/emulator"
 AVD_NAME="AndroMac_Tablet"
-REPORT_FILE="$PROJECT_ROOT/TEST_REPORT.md"
+REPORT_FILE="$PROJECT_ROOT/build/TEST_REPORT.md"
 
 echo "=========================================================="
 echo "   AndroMac — Comprehensive Acceptance Test Suite"

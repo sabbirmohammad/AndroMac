@@ -5,7 +5,7 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Apple_Silicon_(ARM64)-007ACC?style=flat-square)](https://apple.com)
 [![Android Version](https://img.shields.io/badge/Android-16_(ARM64)-3DDC84?style=flat-square&logo=android&logoColor=white)](https://developer.android.com)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-15%2F15_Passed-success?style=flat-square)](TEST_REPORT.md)
+[![Tests](https://img.shields.io/badge/Tests-15%2F15_Passed-success?style=flat-square)](#-পূর্ণাঙ্গ-acceptance-tests-ফলাফল-1515-passed)
 
 **[English Documentation](README.md)** | **[বাংলা সংস্করণ](README_BN.md)**
 
