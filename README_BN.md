@@ -1,4 +1,4 @@
-# AndroMac 🍏📱 (v1.1.0)
+# AndroMac 🍏📱 (v1.2.0)
 
 [![Language](https://img.shields.io/badge/Language-Swift_6-F05138?style=flat-square&logo=swift&logoColor=white)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS_13%2B-000000?style=flat-square&logo=apple&logoColor=white)](https://apple.com)

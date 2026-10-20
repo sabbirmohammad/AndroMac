@@ -3,7 +3,7 @@ import Foundation
 public final class UpdateCheckerService: Sendable {
     public static let shared = UpdateCheckerService()
 
-    public let currentVersion: String = "1.1.0"
+    public let currentVersion: String = "1.2.0"
 
     private init() {}
 

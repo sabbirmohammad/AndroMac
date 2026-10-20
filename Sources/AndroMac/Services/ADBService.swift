@@ -1,8 +1,57 @@
 import Foundation
 import AppKit
 
+private final class MetricsCache: @unchecked Sendable {
+    private var cache: [String: DeviceMetrics] = [:]
+    private let lock = NSLock()
+
+    func get(for serial: String) -> DeviceMetrics? {
+        lock.lock()
+        defer { lock.unlock() }
+        return cache[serial]
+    }
+
+    func set(_ metrics: DeviceMetrics, for serial: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        cache[serial] = metrics
+    }
+
+    func clear(for serial: String? = nil) {
+        lock.lock()
+        defer { lock.unlock() }
+        if let s = serial {
+            cache.removeValue(forKey: s)
+        } else {
+            cache.removeAll()
+        }
+    }
+}
+
+private final class ScreenshotLock: @unchecked Sendable {
+    private var isBusy = false
+    private let lock = NSLock()
+
+    func tryAcquire() -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        if isBusy { return false }
+        isBusy = true
+        return true
+    }
+
+    func release() {
+        lock.lock()
+        defer { lock.unlock() }
+        isBusy = false
+    }
+}
+
 public final class ADBService: Sendable {
     public static let shared = ADBService()
+
+    private let metricsCache = MetricsCache()
+    private let screenshotLock = ScreenshotLock()
 
     private init() {}
 
@@ -68,41 +117,39 @@ public final class ADBService: Sendable {
         }
     }
 
-    public func getMetrics(adbPath: String, serial: String) async -> DeviceMetrics {
-        var metrics = DeviceMetrics()
+    public func clearMetricsCache(for serial: String? = nil) {
+        metricsCache.clear(for: serial)
+    }
+
+    public func getMetrics(adbPath: String, serial: String, forceRefresh: Bool = false) async -> DeviceMetrics {
+        var metrics = metricsCache.get(for: serial) ?? DeviceMetrics()
         metrics.activeSerial = serial
 
-        if let model = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "getprop", "ro.product.model"]) {
-            metrics.model = model
-        }
-
-        if let ver = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "getprop", "ro.build.version.release"]) {
-            metrics.androidVersion = ver
-        }
-
-        if let apiStr = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "getprop", "ro.build.version.sdk"]),
-           let api = Int(apiStr) {
-            metrics.apiLevel = api
-        }
-
-        if let size = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "wm", "size"]) {
-            let comps = size.components(separatedBy: ":")
-            if comps.count > 1 {
-                metrics.resolution = comps[1].trimmingCharacters(in: .whitespacesAndNewlines)
+        // Batch fetch static properties if not yet cached or if forceRefresh is requested
+        let needsStaticFetch = forceRefresh || metrics.model.isEmpty || metrics.resolution.isEmpty
+        if needsStaticFetch {
+            let batchScript = "getprop ro.product.model; echo '---SEP---'; getprop ro.build.version.release; echo '---SEP---'; getprop ro.build.version.sdk; echo '---SEP---'; wm size; echo '---SEP---'; wm density; echo '---SEP---'; pm list packages com.android.vending"
+            if let output = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", batchScript]) {
+                let sections = output.components(separatedBy: "---SEP---").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                if sections.count >= 6 {
+                    metrics.model = sections[0].isEmpty ? "Pixel Tablet" : sections[0]
+                    metrics.androidVersion = sections[1].isEmpty ? "16" : sections[1]
+                    metrics.apiLevel = Int(sections[2]) ?? 36
+                    let sizeComps = sections[3].components(separatedBy: ":")
+                    if sizeComps.count > 1 {
+                        metrics.resolution = sizeComps[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                    }
+                    let densComps = sections[4].components(separatedBy: ":")
+                    if densComps.count > 1, let d = Int(densComps[1].trimmingCharacters(in: .whitespacesAndNewlines)) {
+                        metrics.density = d
+                    }
+                    metrics.isPlayStoreAvailable = sections[5].contains("com.android.vending")
+                }
             }
+            metricsCache.set(metrics, for: serial)
         }
 
-        if let dens = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "wm", "density"]) {
-            let comps = dens.components(separatedBy: ":")
-            if comps.count > 1, let d = Int(comps[1].trimmingCharacters(in: .whitespacesAndNewlines)) {
-                metrics.density = d
-            }
-        }
-
-        if let packages = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "pm", "list", "packages", "com.android.vending"]) {
-            metrics.isPlayStoreAvailable = packages.contains("com.android.vending")
-        }
-
+        // Only query uptime dynamically (single lightweight call)
         if let uptime = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "uptime"]) {
             metrics.uptime = uptime
         }
@@ -162,6 +209,11 @@ public final class ADBService: Sendable {
     }
 
     public func captureScreenshot(adbPath: String, serial: String) async -> NSImage? {
+        guard screenshotLock.tryAcquire() else {
+            return nil
+        }
+        defer { screenshotLock.release() }
+
         let process = Process()
         let pipe = Pipe()
         process.executableURL = URL(fileURLWithPath: adbPath)

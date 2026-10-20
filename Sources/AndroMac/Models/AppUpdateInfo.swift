@@ -9,8 +9,8 @@ public struct AppUpdateInfo: Equatable, Sendable {
     public let publishedAt: String
 
     public init(
-        currentVersion: String = "1.1.0",
-        latestVersion: String = "1.1.0",
+        currentVersion: String = "1.2.0",
+        latestVersion: String = "1.2.0",
         hasUpdate: Bool = false,
         releaseNotes: String = "Up to date",
         releaseURL: URL? = nil,

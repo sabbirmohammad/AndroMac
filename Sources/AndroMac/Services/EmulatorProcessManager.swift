@@ -58,7 +58,11 @@ public final class EmulatorProcessManager: @unchecked Sendable {
         var arguments: [String] = [
             "-avd", config.avdName,
             "-gpu", "host",
-            "-use-keycode-forwarding"
+            "-use-keycode-forwarding",
+            "-camera-back", "none",
+            "-camera-front", "none",
+            "-memory", "\(config.ramMB)",
+            "-cores", "\(config.cpuCores)"
         ]
 
         if !config.bootAnim {
@@ -93,6 +97,9 @@ public final class EmulatorProcessManager: @unchecked Sendable {
 
         process.terminationHandler = { [weak self] proc in
             self?.appendLog("Emulator process terminated with status \(proc.terminationStatus)")
+            if let serial = self?.activeSerial {
+                ADBService.shared.clearMetricsCache(for: serial)
+            }
             self?.activeProcess = nil
             self?.activePID = nil
             self?.activeSerial = nil

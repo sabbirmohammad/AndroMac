@@ -70,19 +70,19 @@ public final class AVDManager: Sendable {
         firstboot.bootFromDownloadableSnapshot=yes
         firstboot.bootFromLocalSnapshot=yes
         firstboot.saveToLocalSnapshot=yes
-        hw.accelerometer=yes
+        hw.accelerometer=no
         hw.audioInput=yes
         hw.audioOutput=yes
         hw.battery=yes
-        hw.camera.back=virtualscene
-        hw.camera.front=emulated
+        hw.camera.back=none
+        hw.camera.front=none
         hw.cpu.arch=arm64
         hw.cpu.ncore=\(config.cpuCores)
         hw.device.manufacturer=Google
         hw.device.name=pixel_tablet
-        hw.gps=yes
+        hw.gps=no
         hw.gpu.enabled=yes
-        hw.gpu.mode=\(config.gpuMode)
+        hw.gpu.mode=\(config.gpuMode == "auto" ? "host" : config.gpuMode)
         hw.initialOrientation=\(config.orientation)
         hw.keyboard=yes
         hw.keyboard.charmap=qwerty2
@@ -93,7 +93,7 @@ public final class AVDManager: Sendable {
         hw.mainKeys=no
         hw.ramSize=\(config.ramMB)
         hw.sdCard=yes
-        hw.sensors.orientation=yes
+        hw.sensors.orientation=no
         image.sysdir.1=\(sysdirRel)
         runtime.network.latency=none
         runtime.network.speed=full
@@ -104,7 +104,7 @@ public final class AVDManager: Sendable {
         tag.display=Google Play
         tag.id=google_apis_playstore
         target=\(targetAndroid)
-        vm.heapSize=\(config.heapSizeMB)
+        vm.heapSize=\(config.heapSizeMB)M
         """
 
         let configIniPath = "\(avdDir)/config.ini"

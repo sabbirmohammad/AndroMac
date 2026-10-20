@@ -41,7 +41,11 @@ public final class AppViewModel: ObservableObject {
     @Published public var installedApps: [InstalledApp] = []
     @Published public var screenPreview: NSImage?
     @Published public var logs: [String] = []
-    @Published public var selectedTab: NavigationTab = .dashboard
+    @Published public var selectedTab: NavigationTab = .dashboard {
+        didSet {
+            handleTabChange(from: oldValue, to: selectedTab)
+        }
+    }
     @Published public var isInstallingAPK: Bool = false
     @Published public var apkInstallResult: APKInstallResult?
     @Published public var alertMessage: String?
@@ -101,6 +105,7 @@ public final class AppViewModel: ObservableObject {
     @Published public var isLiveStreaming: Bool = false
     @Published public var liveDragStartLocation: CGPoint? = nil
     private var liveStreamTimer: Timer?
+    private var isCapturingScreen: Bool = false
 
     // 7. OTA / Update Checker
     @Published public var updateInfo: AppUpdateInfo? = nil
@@ -538,10 +543,12 @@ public final class AppViewModel: ObservableObject {
 
     private func startLiveStream() {
         liveStreamTimer?.invalidate()
-        captureScreen()
+        if selectedTab == .dashboard {
+            captureScreen()
+        }
         liveStreamTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
-                guard let self = self, self.isLiveStreaming, self.state.isRunning else { return }
+                guard let self = self, self.isLiveStreaming, self.state.isRunning, self.selectedTab == .dashboard else { return }
                 self.captureScreen()
             }
         }
@@ -551,6 +558,23 @@ public final class AppViewModel: ObservableObject {
         liveStreamTimer?.invalidate()
         liveStreamTimer = nil
         isLiveStreaming = false
+    }
+
+    private func handleTabChange(from oldTab: NavigationTab, to newTab: NavigationTab) {
+        if newTab == .logs {
+            refreshLogs()
+        } else if newTab == .dashboard {
+            refreshMetrics()
+            if isLiveStreaming && state.isRunning && liveStreamTimer == nil {
+                startLiveStream()
+            }
+        } else {
+            // Away from dashboard: suspend live stream timer to eliminate background CPU/memory waste
+            if liveStreamTimer != nil {
+                liveStreamTimer?.invalidate()
+                liveStreamTimer = nil
+            }
+        }
     }
 
     public func handleScreenTap(normalizedX: Double, normalizedY: Double) {
@@ -751,11 +775,16 @@ public final class AppViewModel: ObservableObject {
     }
 
     public func captureScreen() {
+        guard !isCapturingScreen else { return }
         guard let adb = report.adbPath, let serial = EmulatorProcessManager.shared.activeSerial else { return }
+        isCapturingScreen = true
         Task {
             let img = await ADBService.shared.captureScreenshot(adbPath: adb, serial: serial)
             await MainActor.run {
-                self.screenPreview = img
+                self.isCapturingScreen = false
+                if let valid = img {
+                    self.screenPreview = valid
+                }
             }
         }
     }
@@ -791,8 +820,12 @@ public final class AppViewModel: ObservableObject {
         metricsTimer?.invalidate()
         metricsTimer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
-                self?.refreshMetrics()
-                self?.refreshLogs()
+                guard let self = self, self.state.isRunning else { return }
+                if self.selectedTab == .dashboard {
+                    self.refreshMetrics()
+                } else if self.selectedTab == .logs {
+                    self.refreshLogs()
+                }
             }
         }
     }

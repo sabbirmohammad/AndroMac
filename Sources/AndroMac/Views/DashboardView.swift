@@ -14,7 +14,7 @@ public struct DashboardView: View {
                             Text("AndroMac Tablet")
                                 .font(.system(size: 24, weight: .bold))
                             StatusBadge(state: viewModel.state)
-                            Text("v1.1.0")
+                            Text("v1.2.0")
                                 .font(.system(size: 11, weight: .semibold))
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
@@ -112,6 +112,15 @@ public struct DashboardView: View {
                         Spacer()
 
                         if viewModel.state.isRunning {
+                            Button(action: { FullScreenCoordinator.shared.focusEmulatorWindow() }) {
+                                Label("Native 120Hz Window", systemImage: "macwindow.on.rectangle")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.purple)
+                            .controlSize(.small)
+                            .help("Bring the native Metal-accelerated Android Emulator window to the front for 60-120 FPS high-refresh rate and zero input lag.")
+
                             Toggle("Live In-App Stream", isOn: Binding(
                                 get: { viewModel.isLiveStreaming },
                                 set: { viewModel.toggleLiveStream(enabled: $0) }

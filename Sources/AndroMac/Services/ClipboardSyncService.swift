@@ -9,6 +9,7 @@ public final class ClipboardSyncService: @unchecked Sendable {
     private var lastAndroidText: String = ""
     private var lastMacText: String = ""
     private var isSyncing: Bool = false
+    private var pollCycle: Int = 0
 
     public private(set) var isRunning: Bool = false
     public var onSyncEvent: (@Sendable (String) -> Void)?
@@ -19,9 +20,11 @@ public final class ClipboardSyncService: @unchecked Sendable {
         guard !isRunning else { return }
         isRunning = true
         lastMacChangeCount = NSPasteboard.general.changeCount
+        pollCycle = 0
 
         DispatchQueue.main.async { [weak self] in
-            self?.syncTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+            // Fast 1.5s check for Mac in-memory pasteboard changes
+            self?.syncTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in
                 guard let self = self, self.isRunning else { return }
                 Task {
                     await self.performSyncCycle(adbPath: adbPath, serial: serial)
@@ -61,7 +64,13 @@ public final class ClipboardSyncService: @unchecked Sendable {
             }
         }
 
-        // Check if Android clipboard changed
+        // Check if Android clipboard changed (polled every 4th cycle ~6s, only when app is active to save battery/CPU)
+        pollCycle += 1
+        guard pollCycle % 4 == 0 else { return }
+
+        let isAppActive = await MainActor.run { NSApplication.shared.isActive }
+        guard isAppActive else { return }
+
         if let androidText = await getAndroidClipboard(adbPath: adbPath, serial: serial),
            !androidText.isEmpty, androidText != lastAndroidText, androidText != lastMacText {
             lastAndroidText = androidText

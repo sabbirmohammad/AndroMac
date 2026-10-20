@@ -6,10 +6,10 @@ BUILD_DIR="$PROJECT_ROOT/build"
 APP_NAME="AndroMac.app"
 APP_BUNDLE="$BUILD_DIR/$APP_NAME"
 
-echo "=== Building AndroMac macOS Application ==="
+echo "=== Building AndroMac macOS Application (Optimized Release) ==="
 
 cd "$PROJECT_ROOT"
-swift build -c release
+swift build -c release -Xswiftc -O -Xswiftc -whole-module-optimization
 
 echo "=== Creating macOS .app Bundle Structure ==="
 rm -rf "$APP_BUNDLE"
@@ -24,6 +24,9 @@ if [ -f "$PROJECT_ROOT/Sources/AndroMac/Resources/AppIcon.icns" ]; then
 fi
 
 chmod +x "$APP_BUNDLE/Contents/MacOS/AndroMac"
+
+echo "=== Stripping Debug Symbols for Maximum Launch Speed ==="
+strip -u -r "$APP_BUNDLE/Contents/MacOS/AndroMac" 2>/dev/null || true
 
 echo "=== Code Signing Bundle (Ad-Hoc Development) ==="
 codesign --force --deep --sign - "$APP_BUNDLE"
