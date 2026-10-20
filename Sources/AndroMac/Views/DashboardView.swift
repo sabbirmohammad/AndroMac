@@ -25,7 +25,7 @@ public struct DashboardView: View {
                             .foregroundColor(.accentColor)
                             .cornerRadius(4)
 
-                            Text("v1.3.0")
+                            Text("v1.4.0")
                                 .font(.system(size: 11, weight: .semibold))
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
@@ -56,6 +56,15 @@ public struct DashboardView: View {
                         .controlSize(.small)
 
                         if viewModel.state.isRunning {
+                            ActionButton(
+                                title: "Clean Window",
+                                subtitle: "Zero Sidebar",
+                                icon: "sparkles.tv",
+                                color: .indigo
+                            ) {
+                                viewModel.launchCleanScrcpyWindow()
+                            }
+
                             ActionButton(
                                 title: "Full-Screen",
                                 subtitle: "Ctrl+Cmd+F",
@@ -125,14 +134,22 @@ public struct DashboardView: View {
                         Spacer()
 
                         if viewModel.state.isRunning {
-                            Button(action: { FullScreenCoordinator.shared.focusEmulatorWindow() }) {
-                                Label("Native 120Hz Window", systemImage: "macwindow.on.rectangle")
+                            Button(action: { viewModel.launchCleanScrcpyWindow() }) {
+                                Label("Clean Window (No Sidebar)", systemImage: "sparkles")
                                     .font(.system(size: 11, weight: .semibold))
                             }
                             .buttonStyle(.borderedProminent)
-                            .tint(.purple)
+                            .tint(.indigo)
                             .controlSize(.small)
-                            .help("Bring the native Metal-accelerated Android Emulator window to the front for 60-120 FPS high-refresh rate and zero input lag.")
+                            .help("Launch the pure scrcpy display window without any Google emulator sidebars or frames.")
+
+                            Button(action: { FullScreenCoordinator.shared.focusEmulatorWindow() }) {
+                                Label("Emulator Window", systemImage: "macwindow.on.rectangle")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                            .help("Bring the native Google Android Emulator window to the front.")
 
                             Toggle("Live In-App Stream", isOn: Binding(
                                 get: { viewModel.isLiveStreaming },

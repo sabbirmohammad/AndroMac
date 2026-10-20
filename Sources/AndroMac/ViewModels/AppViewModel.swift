@@ -171,7 +171,9 @@ public final class AppViewModel: ObservableObject {
                         if self.isClipboardSyncEnabled, let s = EmulatorProcessManager.shared.activeSerial {
                             ClipboardSyncService.shared.startSync(adbPath: adb, serial: s)
                         }
-                        if self.config.autoFullScreen {
+                        if self.config.useScrcpyWindow && ScrcpyService.shared.isAvailable, let s = EmulatorProcessManager.shared.activeSerial {
+                            try? ScrcpyService.shared.startSession(adbPath: adb, serial: s, title: "AndroMac", fullscreen: self.config.autoFullScreen)
+                        } else if self.config.autoFullScreen {
                             FullScreenCoordinator.shared.toggleFullScreen()
                         } else {
                             FullScreenCoordinator.shared.focusEmulatorWindow()
@@ -179,6 +181,7 @@ public final class AppViewModel: ObservableObject {
                     } else if case .stopped = newState {
                         self.stopMetricsPolling()
                         self.stopLiveStream()
+                        ScrcpyService.shared.stopSession()
                         ClipboardSyncService.shared.stopSync()
                         self.refreshInstances()
                     }
@@ -217,6 +220,18 @@ public final class AppViewModel: ObservableObject {
 
     public func toggleFullScreen() {
         FullScreenCoordinator.shared.toggleFullScreen()
+    }
+
+    public func launchCleanScrcpyWindow() {
+        guard let adb = report.adbPath, let serial = EmulatorProcessManager.shared.activeSerial, state.isRunning else {
+            showAlertMessage("Android must be running to open the clean display window.")
+            return
+        }
+        do {
+            try ScrcpyService.shared.startSession(adbPath: adb, serial: serial, title: "AndroMac", fullscreen: config.autoFullScreen)
+        } catch {
+            showAlertMessage("Failed to start clean display window: \(error.localizedDescription)")
+        }
     }
 
     // MARK: - 1. Bidirectional Clipboard Sync

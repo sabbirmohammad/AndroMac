@@ -64,7 +64,14 @@ public struct DeviceControlsView: View {
                             viewModel.sendRecents()
                         }
                         ControlButton(
-                            title: "Clean Full-Screen",
+                            title: "Pure Window (No Sidebar)",
+                            icon: "sparkles",
+                            color: .indigo
+                        ) {
+                            viewModel.launchCleanScrcpyWindow()
+                        }
+                        ControlButton(
+                            title: "Full-Screen Mode",
                             icon: "arrow.up.left.and.arrow.down.right",
                             color: .green
                         ) {
@@ -73,10 +80,10 @@ public struct DeviceControlsView: View {
                     }
 
                     HStack(spacing: 6) {
-                        Image(systemName: "info.circle")
-                            .foregroundColor(.secondary)
+                        Image(systemName: "sparkles")
+                            .foregroundColor(.accentColor)
                             .font(.system(size: 11))
-                        Text("To collapse the Google Emulator floating sidebar, click '-' (minimize) at the top of that bar, or use Clean Full-Screen.")
+                        Text("Use 'Pure Window' to display Android via scrcpy with 0 sidebars, full keyboard/mouse integration and native macOS window controls.")
                             .font(.system(size: 11))
                             .foregroundColor(.secondary)
                     }

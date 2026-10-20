@@ -121,6 +121,34 @@ public struct DisplaySettingsView: View {
                             Divider()
 
                             Toggle(isOn: Binding(
+                                get: { viewModel.config.useScrcpyWindow },
+                                set: {
+                                    viewModel.config.useScrcpyWindow = $0
+                                    viewModel.config.save()
+                                }
+                            )) {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Text("Pure Display Engine (scrcpy Integration)")
+                                            .font(.system(size: 13, weight: .medium))
+                                        Text("Recommended")
+                                            .font(.system(size: 9, weight: .bold))
+                                            .padding(.horizontal, 5)
+                                            .padding(.vertical, 1)
+                                            .background(Color.green.opacity(0.15))
+                                            .foregroundColor(.green)
+                                            .cornerRadius(3)
+                                    }
+                                    Text("Replaces Google's cluttered emulator window with a 100% clean, native macOS window with zero sidebars, high refresh rates, and native Mac full-screen.")
+                                        .font(.system(size: 11))
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            .toggleStyle(.switch)
+
+                            Divider()
+
+                            Toggle(isOn: Binding(
                                 get: { viewModel.config.autoFullScreen },
                                 set: {
                                     viewModel.config.autoFullScreen = $0
@@ -128,9 +156,9 @@ public struct DisplaySettingsView: View {
                                 }
                             )) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("Auto Full-Screen on Launch (Removes Side Controller)")
+                                    Text("Auto Full-Screen on Launch")
                                         .font(.system(size: 13, weight: .medium))
-                                    Text("Automatically expands to borderless full-screen, eliminating the floating side toolbar.")
+                                    Text("Automatically expands the display window to borderless full-screen.")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }

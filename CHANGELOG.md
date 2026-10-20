@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-10-21
+
+### Added
+- **Pure Display Engine (`scrcpy` Integration)**: Integrated high-performance `scrcpy` display engine delivering a 100% clean, native macOS window with zero sidebars, zero frames, and zero clutter.
+- **Auto-Hide Raw QEMU Window**: Automatically hides Google Emulator's cluttered window and floating side controller into the background, seamlessly surfacing the clean display.
+- **Mac-Native Full-Screen & 120 FPS**: Native macOS traffic light controls (close, minimize, full-screen), 120 FPS Metal hardware video decoding, and smooth trackpad gestures.
+
 ## [1.3.0] - 2026-10-21
 
 ### Added
