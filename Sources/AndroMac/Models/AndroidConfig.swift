@@ -44,13 +44,13 @@ public struct ResolutionPreset: Identifiable, Hashable, Codable, Sendable {
     public let description: String
 
     public static let presets: [ResolutionPreset] = [
-        ResolutionPreset(name: "MacBook Air 13\" Native", width: 2560, height: 1600, aspectRatio: "16:10", description: "Default native MacBook Air Retina resolution"),
+        ResolutionPreset(name: "Balanced 16:10 Laptop (Recommended for 8GB)", width: 1920, height: 1200, aspectRatio: "16:10", description: "Smooth 60 FPS, optimized memory, prevents full-screen lag"),
+        ResolutionPreset(name: "MacBook Air 13\" Native Retina", width: 2560, height: 1600, aspectRatio: "16:10", description: "Ultra-sharp 2.5K Retina resolution (higher memory usage)"),
+        ResolutionPreset(name: "Ultra-Light 16:10 (Fastest)", width: 1440, height: 900, aspectRatio: "16:10", description: "Matches 13\" MacBook Air points 1:1, lowest battery draw"),
         ResolutionPreset(name: "MacBook Pro 14\" Scaled", width: 3024, height: 1964, aspectRatio: "16:10", description: "High-DPI crisp rendering for MacBook Pro 14\""),
         ResolutionPreset(name: "MacBook Pro 16\" Scaled", width: 3072, height: 1920, aspectRatio: "16:10", description: "Expansive workspace for MacBook Pro 16\""),
         ResolutionPreset(name: "Full HD 16:9 Laptop", width: 1920, height: 1080, aspectRatio: "16:9", description: "Standard 1080p widescreen laptop display"),
-        ResolutionPreset(name: "Balanced 16:10 Laptop", width: 1920, height: 1200, aspectRatio: "16:10", description: "Optimized battery, fast frame rates & smooth rendering"),
-        ResolutionPreset(name: "Compact 16:10", width: 1680, height: 1050, aspectRatio: "16:10", description: "Low memory footprint"),
-        ResolutionPreset(name: "Ultra-Light 16:10", width: 1440, height: 900, aspectRatio: "16:10", description: "Fastest frame rates and lowest power draw")
+        ResolutionPreset(name: "Compact 16:10", width: 1680, height: 1050, aspectRatio: "16:10", description: "Low memory footprint")
     ]
 }
 

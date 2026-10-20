@@ -50,7 +50,10 @@ public final class ScrcpyService: @unchecked Sendable {
         adbPath: String,
         serial: String,
         title: String = "AndroMac",
-        fullscreen: Bool = false
+        fullscreen: Bool = false,
+        maxSize: Int = 1600,
+        maxFps: Int = 60,
+        videoBuffer: Int = 15
     ) throws {
         lock.lock()
         defer { lock.unlock() }
@@ -82,7 +85,10 @@ public final class ScrcpyService: @unchecked Sendable {
             "--window-title", title,
             "--stay-awake",
             "--no-audio",
-            "--max-fps", "120",
+            "--max-size", "\(maxSize)",
+            "--max-fps", "\(maxFps)",
+            "--video-bit-rate", "8M",
+            "--video-buffer", "\(videoBuffer)",
             "--video-codec", "h264"
         ]
 

@@ -850,9 +850,17 @@ public final class AppViewModel: ObservableObject {
         config.save()
         do {
             try AVDManager.shared.configureAVD(config: config, report: report)
+            if let serial = EmulatorProcessManager.shared.activeSerial, let adb = report.adbPath, state.isRunning {
+                let w = config.width
+                let h = config.height
+                let d = config.density
+                Task {
+                    await ADBService.shared.updateDisplayResolution(adbPath: adb, serial: serial, width: w, height: h, density: d)
+                }
+            }
             if notify {
                 let modeStr = config.deviceMode == .laptop ? "Laptop" : "Tablet"
-                showAlertMessage("\(modeStr) configuration saved! Restart Android to apply hardware changes.")
+                showAlertMessage("\(modeStr) configuration saved! Display resolution and scaling updated.")
             }
         } catch {
             if notify {

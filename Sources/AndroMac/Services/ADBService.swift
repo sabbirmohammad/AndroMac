@@ -282,4 +282,9 @@ public final class ADBService: Sendable {
     public func uninstallApp(adbPath: String, serial: String, packageName: String) async throws {
         _ = try await executeCommand(adbPath: adbPath, serial: serial, arguments: ["uninstall", packageName])
     }
+
+    public func updateDisplayResolution(adbPath: String, serial: String, width: Int, height: Int, density: Int) async {
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "wm", "size", "\(width)x\(height)"])
+        _ = try? await executeCommand(adbPath: adbPath, serial: serial, arguments: ["shell", "wm", "density", "\(density)"])
+    }
 }

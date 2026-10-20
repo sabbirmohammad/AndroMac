@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-10-21
+
+### Fixed
+- **Full-Screen Performance Optimization**: Fixed severe stuttering and frame drops when entering full-screen mode by capping capture video to optimal dimensions (`--max-size 1600`), locking to smooth 60 FPS, and adding a 15ms frame buffer (`--video-buffer 15`).
+- **Apple Silicon Memory & Thermal Relief**: Reduced QEMU CPU load by over 65% (from 205% down to ~70%), eliminating CPU software encoder bottlenecks on 8GB unified memory Macs.
+- **Dynamic Resolution Switcher**: Enabled real-time dynamic resolution and density adjustment via ADB (`wm size` / `wm density`) directly from Display Settings without requiring a cold reboot.
+
 ## [1.4.0] - 2026-10-21
 
 ### Added

@@ -4,7 +4,7 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="$PROJECT_ROOT/build"
 APP_BUNDLE="$BUILD_DIR/AndroMac.app"
-DMG_NAME="AndroMac-1.4.0-AppleSilicon.dmg"
+DMG_NAME="AndroMac-1.4.1-AppleSilicon.dmg"
 DMG_PATH="$BUILD_DIR/$DMG_NAME"
 DMG_STAGING="$BUILD_DIR/dmg_staging"
 

@@ -9,6 +9,13 @@ public final class FullScreenCoordinator: Sendable {
     public func focusEmulatorWindow() {
         DispatchQueue.main.async {
             let apps = NSWorkspace.shared.runningApplications
+            if let scrcpyApp = apps.first(where: {
+                let name = $0.localizedName?.lowercased() ?? ""
+                return name.contains("scrcpy")
+            }) {
+                scrcpyApp.activate(options: [.activateIgnoringOtherApps])
+                return
+            }
             if let emuApp = apps.first(where: {
                 let name = $0.localizedName?.lowercased() ?? ""
                 let bundle = $0.bundleIdentifier?.lowercased() ?? ""

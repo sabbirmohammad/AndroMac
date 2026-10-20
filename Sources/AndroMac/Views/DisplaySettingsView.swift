@@ -209,6 +209,14 @@ public struct DisplaySettingsView: View {
                             .onTapGesture {
                                 viewModel.config.width = preset.width
                                 viewModel.config.height = preset.height
+                                viewModel.config.save()
+                                if let s = EmulatorProcessManager.shared.activeSerial, let adb = viewModel.report.adbPath, viewModel.state.isRunning {
+                                    let w = preset.width
+                                    let h = preset.height
+                                    Task {
+                                        _ = try? await ADBService.shared.executeCommand(adbPath: adb, serial: s, arguments: ["shell", "wm", "size", "\(w)x\(h)"])
+                                    }
+                                }
                             }
                         }
                     }
@@ -241,6 +249,13 @@ public struct DisplaySettingsView: View {
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 viewModel.config.density = preset.dpi
+                                viewModel.config.save()
+                                if let s = EmulatorProcessManager.shared.activeSerial, let adb = viewModel.report.adbPath, viewModel.state.isRunning {
+                                    let dpi = preset.dpi
+                                    Task {
+                                        _ = try? await ADBService.shared.executeCommand(adbPath: adb, serial: s, arguments: ["shell", "wm", "density", "\(dpi)"])
+                                    }
+                                }
                             }
                         }
                     }
