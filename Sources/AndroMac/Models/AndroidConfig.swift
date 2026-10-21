@@ -115,7 +115,7 @@ public struct TabletConfig: Codable, Equatable, Sendable {
         bootAnim: Bool = false,
         keycodeForwarding: Bool = true,
         autoFullScreen: Bool = false,
-        useScrcpyWindow: Bool = true
+        useScrcpyWindow: Bool = false
     ) {
         self.avdName = avdName
         self.displayName = displayName
@@ -172,7 +172,7 @@ public struct TabletConfig: Codable, Equatable, Sendable {
         self.bootAnim = try container.decodeIfPresent(Bool.self, forKey: .bootAnim) ?? false
         self.keycodeForwarding = try container.decodeIfPresent(Bool.self, forKey: .keycodeForwarding) ?? true
         self.autoFullScreen = try container.decodeIfPresent(Bool.self, forKey: .autoFullScreen) ?? false
-        self.useScrcpyWindow = try container.decodeIfPresent(Bool.self, forKey: .useScrcpyWindow) ?? true
+        self.useScrcpyWindow = try container.decodeIfPresent(Bool.self, forKey: .useScrcpyWindow) ?? false
     }
 
     public static func load() -> TabletConfig {

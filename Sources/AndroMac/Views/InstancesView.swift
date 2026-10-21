@@ -6,37 +6,25 @@ public struct InstancesView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 18) {
                 // Header
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Instance & Profile Manager")
-                            .font(.system(size: 20, weight: .bold))
-                        Text("Manage and switch between multiple Android virtual devices (Work, Gaming, or Custom specs).")
-                            .font(.system(size: 13))
-                            .foregroundColor(.secondary)
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .center) {
+                        headerTitleSection
+                        Spacer()
+                        headerActionsSection
                     }
-                    Spacer()
-
-                    Button(action: { viewModel.showCreateInstanceModal = true }) {
-                        Label("New Instance", systemImage: "plus.circle.fill")
+                    VStack(alignment: .leading, spacing: 8) {
+                        headerTitleSection
+                        headerActionsSection
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.small)
-
-                    Button(action: { viewModel.refreshInstances() }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                    .help("Refresh Instances")
                 }
 
                 if viewModel.state.isRunning {
-                    HStack(spacing: 10) {
+                    HStack(spacing: 8) {
                         Image(systemName: "info.circle.fill")
                             .foregroundColor(.blue)
-                        Text("Tablet is currently running. Stop the tablet before switching to a different instance.")
+                        Text("Android is running. Stop Android before switching instances.")
                             .font(.system(size: 12))
                             .foregroundColor(.secondary)
                     }
@@ -50,77 +38,33 @@ public struct InstancesView: View {
                 VStack(spacing: 12) {
                     ForEach(viewModel.instances) { instance in
                         VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Image(systemName: "ipad.landscape")
-                                    .font(.system(size: 22))
-                                    .foregroundColor(instance.isCurrent ? .accentColor : .secondary)
-
-                                VStack(alignment: .leading, spacing: 2) {
-                                    HStack(spacing: 8) {
-                                        Text(instance.displayName)
-                                            .font(.system(size: 15, weight: .bold))
-                                        Text("(\(instance.name))")
-                                            .font(.system(size: 12, design: .monospaced))
-                                            .foregroundColor(.secondary)
-
-                                        if instance.isCurrent {
-                                            Text(instance.isRunning ? "Active & Running" : "Active Profile")
-                                                .font(.system(size: 10, weight: .bold))
-                                                .padding(.horizontal, 6)
-                                                .padding(.vertical, 2)
-                                                .background(instance.isRunning ? Color.green.opacity(0.15) : Color.blue.opacity(0.15))
-                                                .foregroundColor(instance.isRunning ? .green : .blue)
-                                                .cornerRadius(4)
-                                        }
-                                    }
-                                    Text(instance.targetAndroid)
-                                        .font(.system(size: 11))
-                                        .foregroundColor(.secondary)
+                            ViewThatFits(in: .horizontal) {
+                                HStack(alignment: .center) {
+                                    instanceInfo(instance)
+                                    Spacer()
+                                    instanceActions(instance)
                                 }
-
-                                Spacer()
-
-                                if !instance.isCurrent {
-                                    Button("Switch to This") {
-                                        viewModel.switchToInstance(name: instance.name)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    instanceInfo(instance)
+                                    HStack {
+                                        Spacer()
+                                        instanceActions(instance)
                                     }
-                                    .buttonStyle(.borderedProminent)
-                                    .controlSize(.small)
-                                    .disabled(viewModel.state.isRunning)
-                                }
-
-                                Button(action: {
-                                    viewModel.selectedInstanceToClone = instance
-                                    viewModel.showCloneInstanceModal = true
-                                }) {
-                                    Label("Clone", systemImage: "doc.on.doc")
-                                }
-                                .buttonStyle(.bordered)
-                                .controlSize(.small)
-
-                                if !instance.isCurrent {
-                                    Button(role: .destructive, action: {
-                                        viewModel.deleteInstance(name: instance.name)
-                                    }) {
-                                        Image(systemName: "trash")
-                                    }
-                                    .buttonStyle(.bordered)
-                                    .controlSize(.small)
-                                    .disabled(viewModel.state.isRunning)
                                 }
                             }
 
                             Divider()
 
-                            // Specs Pills
-                            HStack(spacing: 16) {
-                                SpecChip(icon: "display", label: "Display", value: "\(instance.resolution) @ \(instance.density) DPI")
+                            // Responsive Specs Grid
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 8)], spacing: 8) {
+                                SpecChip(icon: "display", label: "Display", value: "\(instance.resolution)")
+                                SpecChip(icon: "gauge.with.needle", label: "DPI", value: "\(instance.density)")
                                 SpecChip(icon: "memorychip.fill", label: "RAM", value: "\(instance.ramMB) MB")
                                 SpecChip(icon: "cpu.fill", label: "Cores", value: "\(instance.cpuCores) vCPUs")
                                 SpecChip(icon: "internaldrive.fill", label: "Storage", value: "\(instance.storageGB) GB")
                             }
                         }
-                        .padding()
+                        .padding(12)
                         .background(Color(NSColor.controlBackgroundColor))
                         .cornerRadius(10)
                         .overlay(
@@ -130,10 +74,10 @@ public struct InstancesView: View {
                     }
                 }
             }
-            .padding()
+            .padding(14)
         }
         .sheet(isPresented: Binding(get: { viewModel.showCreateInstanceModal }, set: { viewModel.showCreateInstanceModal = $0 })) {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 14) {
                 Text("Create New Android Instance")
                     .font(.system(size: 16, weight: .bold))
 
@@ -146,7 +90,7 @@ public struct InstancesView: View {
 
                     Divider()
 
-                    Text("Screen & Hardware Configuration:")
+                    Text("Configuration:")
                         .font(.system(size: 12, weight: .semibold))
 
                     Picker("Preset", selection: Binding(
@@ -157,9 +101,9 @@ public struct InstancesView: View {
                             else if val == "1080x2400" { viewModel.newInstWidth = 1080; viewModel.newInstHeight = 2400; viewModel.newInstDensity = 420 }
                         }
                     )) {
-                        Text("16:10 Native Tablet (2560x1600)").tag("2560x1600")
-                        Text("Balanced Tablet (1920x1200)").tag("1920x1200")
-                        Text("Phone Portrait (1080x2400)").tag("1080x2400")
+                        Text("16:10 Native (2560x1600)").tag("2560x1600")
+                        Text("Balanced (1920x1200)").tag("1920x1200")
+                        Text("Portrait (1080x2400)").tag("1080x2400")
                     }
 
                     HStack {
@@ -180,7 +124,7 @@ public struct InstancesView: View {
                     Button("Cancel") {
                         viewModel.showCreateInstanceModal = false
                     }
-                    Button("Create Instance") {
+                    Button("Create") {
                         viewModel.showCreateInstanceModal = false
                         viewModel.createNewInstance(
                             name: viewModel.newInstName.trimmingCharacters(in: .whitespaces).replacingOccurrences(of: " ", with: "_"),
@@ -200,10 +144,10 @@ public struct InstancesView: View {
                 }
             }
             .padding()
-            .frame(width: 440)
+            .frame(width: 420)
         }
         .sheet(isPresented: Binding(get: { viewModel.showCloneInstanceModal }, set: { viewModel.showCloneInstanceModal = $0 })) {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 14) {
                 Text("Clone Instance")
                     .font(.system(size: 16, weight: .bold))
 
@@ -238,10 +182,112 @@ public struct InstancesView: View {
                 }
             }
             .padding()
-            .frame(width: 400)
+            .frame(width: 380)
         }
         .onAppear {
             viewModel.refreshInstances()
+        }
+    }
+
+    // MARK: - Subviews
+
+    @ViewBuilder
+    private var headerTitleSection: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Instance Manager")
+                .font(.system(size: 20, weight: .bold))
+            Text("Create and switch between Android virtual devices.")
+                .font(.system(size: 12))
+                .foregroundColor(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var headerActionsSection: some View {
+        HStack(spacing: 8) {
+            Button(action: { viewModel.showCreateInstanceModal = true }) {
+                Label("New Instance", systemImage: "plus.circle.fill")
+                    .lineLimit(1)
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+
+            Button(action: { viewModel.refreshInstances() }) {
+                Image(systemName: "arrow.clockwise")
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+            .help("Refresh Instances")
+        }
+    }
+
+    @ViewBuilder
+    private func instanceInfo(_ instance: AVDInstance) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "ipad.landscape")
+                .font(.system(size: 20))
+                .foregroundColor(instance.isCurrent ? .accentColor : .secondary)
+
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 6) {
+                    Text(instance.displayName)
+                        .font(.system(size: 14, weight: .bold))
+                        .lineLimit(1)
+                    Text("(\(instance.name))")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+
+                    if instance.isCurrent {
+                        Text(instance.isRunning ? "Running" : "Active")
+                            .font(.system(size: 9, weight: .bold))
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(instance.isRunning ? Color.green.opacity(0.15) : Color.blue.opacity(0.15))
+                            .foregroundColor(instance.isRunning ? .green : .blue)
+                            .cornerRadius(4)
+                    }
+                }
+                Text(instance.targetAndroid)
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func instanceActions(_ instance: AVDInstance) -> some View {
+        HStack(spacing: 6) {
+            if !instance.isCurrent {
+                Button("Switch") {
+                    viewModel.switchToInstance(name: instance.name)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .disabled(viewModel.state.isRunning)
+            }
+
+            Button(action: {
+                viewModel.selectedInstanceToClone = instance
+                viewModel.showCloneInstanceModal = true
+            }) {
+                Label("Clone", systemImage: "doc.on.doc")
+                    .lineLimit(1)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+
+            if !instance.isCurrent {
+                Button(role: .destructive, action: {
+                    viewModel.deleteInstance(name: instance.name)
+                }) {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+                .disabled(viewModel.state.isRunning)
+            }
         }
     }
 }
@@ -261,6 +307,9 @@ private struct SpecChip: View {
                 .foregroundColor(.secondary)
             Text(value)
                 .font(.system(size: 11, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

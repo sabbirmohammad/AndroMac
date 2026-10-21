@@ -6,14 +6,14 @@ public struct GameKeymapperView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 18) {
                 // Header
-                HStack(alignment: .top) {
+                HStack(alignment: .center) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Game Keymapper & Controller")
+                        Text("Game Keymapper")
                             .font(.system(size: 20, weight: .bold))
-                        Text("Map Mac keyboard keys & physical gamepads (PS5 / Xbox) directly to Android touch & buttons.")
-                            .font(.system(size: 13))
+                        Text("Map keyboard and controller inputs to touch actions.")
+                            .font(.system(size: 12))
                             .foregroundColor(.secondary)
                     }
                     Spacer()
@@ -23,26 +23,27 @@ public struct GameKeymapperView: View {
                         set: { viewModel.toggleKeymapper(enabled: $0) }
                     ))
                     .toggleStyle(.switch)
+                    .controlSize(.small)
                     .disabled(!viewModel.state.isRunning)
                 }
 
                 // Gamepad Connection Card
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "gamecontroller.fill")
-                            .font(.system(size: 18))
+                            .font(.system(size: 16))
                             .foregroundColor(.purple)
-                        Text("Physical Gamepad Status")
-                            .font(.system(size: 14, weight: .semibold))
+                        Text("Gamepad Status")
+                            .font(.system(size: 13, weight: .semibold))
                         Spacer()
                         if !viewModel.connectedGamepads.isEmpty {
                             Text("Connected")
-                                .font(.system(size: 11, weight: .semibold))
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
+                                .font(.system(size: 10, weight: .bold))
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
                                 .background(Color.green.opacity(0.15))
                                 .foregroundColor(.green)
-                                .cornerRadius(6)
+                                .cornerRadius(4)
                         }
                     }
 
@@ -50,21 +51,22 @@ public struct GameKeymapperView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "bolt.slash.fill")
                                 .foregroundColor(.secondary)
-                            Text("No external game controller detected. Connect a Bluetooth Xbox, PlayStation, or MFi controller anytime.")
+                                .font(.system(size: 12))
+                            Text("No game controller connected.")
                                 .font(.system(size: 12))
                                 .foregroundColor(.secondary)
                         }
-                        .padding(.vertical, 4)
                     } else {
                         VStack(alignment: .leading, spacing: 4) {
                             ForEach(viewModel.connectedGamepads, id: \.self) { pad in
                                 HStack {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(.green)
+                                        .font(.system(size: 12))
                                     Text(pad)
-                                        .font(.system(size: 13, weight: .medium))
+                                        .font(.system(size: 12, weight: .medium))
                                     Spacer()
-                                    Text("Full A/B/X/Y & D-Pad mapped")
+                                    Text("Ready")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }
@@ -72,26 +74,27 @@ public struct GameKeymapperView: View {
                         }
                     }
 
-                    HStack {
+                    HStack(spacing: 6) {
                         Text("Live Input:")
-                            .font(.system(size: 11, weight: .semibold))
+                            .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
                         Text(viewModel.lastKeymapAction)
                             .font(.system(size: 11, design: .monospaced))
                             .foregroundColor(.accentColor)
+                            .lineLimit(1)
                     }
                 }
-                .padding()
+                .padding(12)
                 .background(Color(NSColor.controlBackgroundColor))
-                .cornerRadius(10)
+                .cornerRadius(8)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.primary.opacity(0.08), lineWidth: 1)
                 )
 
                 // Profile Selector
-                HStack(spacing: 12) {
-                    Text("Keymap Profile:")
+                HStack(spacing: 10) {
+                    Text("Profile:")
                         .font(.system(size: 13, weight: .semibold))
 
                     Picker("", selection: Binding(
@@ -107,21 +110,18 @@ public struct GameKeymapperView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    .frame(width: 250)
+                    .frame(maxWidth: 260)
 
                     Spacer()
                 }
 
                 // Visual Screen Layout Preview
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Tablet Keymap Overlay")
-                        .font(.system(size: 14, weight: .semibold))
-                    Text("Mapped touch coordinates projected on the 16:10 Android tablet screen:")
-                        .font(.system(size: 11))
-                        .foregroundColor(.secondary)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Overlay Preview")
+                        .font(.system(size: 13, weight: .semibold))
 
                     ZStack {
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: 8)
                             .fill(Color.black.opacity(0.85))
                             .aspectRatio(16.0 / 10.0, contentMode: .fit)
 
@@ -139,9 +139,9 @@ public struct GameKeymapperView: View {
                                 if mapping.actionType == .tapCoordinate || mapping.actionType == .swipeDirection {
                                     VStack(spacing: 2) {
                                         Text(mapping.key)
-                                            .font(.system(size: 11, weight: .bold))
+                                            .font(.system(size: 10, weight: .bold))
                                             .foregroundColor(.white)
-                                            .padding(6)
+                                            .padding(5)
                                             .background(Circle().fill(Color.accentColor))
                                         Text(mapping.label)
                                             .font(.system(size: 9, weight: .medium))
@@ -158,42 +158,40 @@ public struct GameKeymapperView: View {
                             }
                         }
                     }
-                    .frame(maxHeight: 280)
-                    .cornerRadius(10)
+                    .frame(maxHeight: 240)
+                    .cornerRadius(8)
                 }
 
-                // Mappings Table
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text("Active Mappings (\(viewModel.activeKeymapProfile.mappings.count))")
-                            .font(.system(size: 14, weight: .semibold))
-                        Spacer()
-                    }
+                // Mappings List
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Active Mappings (\(viewModel.activeKeymapProfile.mappings.count))")
+                        .font(.system(size: 13, weight: .semibold))
 
                     VStack(spacing: 1) {
                         ForEach(viewModel.activeKeymapProfile.mappings) { mapping in
-                            HStack(spacing: 12) {
+                            HStack(spacing: 10) {
                                 Text(mapping.key)
-                                    .font(.system(size: 13, weight: .bold, design: .monospaced))
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
+                                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 3)
                                     .background(Color.accentColor.opacity(0.15))
                                     .foregroundColor(.accentColor)
-                                    .cornerRadius(6)
-                                    .frame(minWidth: 50)
+                                    .cornerRadius(4)
+                                    .frame(minWidth: 40)
 
-                                VStack(alignment: .leading, spacing: 2) {
+                                VStack(alignment: .leading, spacing: 1) {
                                     Text(mapping.label)
-                                        .font(.system(size: 13, weight: .medium))
+                                        .font(.system(size: 12, weight: .medium))
+                                        .lineLimit(1)
                                     Text(mapping.actionType.rawValue)
-                                        .font(.system(size: 11))
+                                        .font(.system(size: 10))
                                         .foregroundColor(.secondary)
                                 }
 
                                 Spacer()
 
                                 if mapping.actionType == .tapCoordinate {
-                                    Text("Position: \(Int(mapping.xPercent * 100))%, \(Int(mapping.yPercent * 100))%")
+                                    Text("\(Int(mapping.xPercent * 100))%, \(Int(mapping.yPercent * 100))%")
                                         .font(.system(size: 11, design: .monospaced))
                                         .foregroundColor(.secondary)
                                 } else if mapping.actionType == .androidKeycode {
@@ -207,8 +205,8 @@ public struct GameKeymapperView: View {
                                 }
                                 .buttonStyle(.borderless)
                             }
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
                             .background(Color(NSColor.controlBackgroundColor))
                         }
                     }
@@ -220,46 +218,54 @@ public struct GameKeymapperView: View {
                 }
 
                 // Add Custom Key Mapping Form
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Add Custom Key Mapping")
-                        .font(.system(size: 14, weight: .semibold))
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Add Mapping")
+                        .font(.system(size: 13, weight: .semibold))
 
-                    HStack(spacing: 12) {
-                        TextField("Key (e.g. F, Shift, C)", text: Binding(get: { viewModel.newKeymapInputKey }, set: { viewModel.newKeymapInputKey = $0 }))
-                            .textFieldStyle(.roundedBorder)
-                            .frame(width: 140)
+                    ViewThatFits(in: .horizontal) {
+                        HStack(spacing: 8) {
+                            TextField("Key (e.g. F)", text: Binding(get: { viewModel.newKeymapInputKey }, set: { viewModel.newKeymapInputKey = $0 }))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(width: 90)
 
-                        TextField("Action Label (e.g. Attack, Crouch)", text: Binding(get: { viewModel.newKeymapLabel }, set: { viewModel.newKeymapLabel = $0 }))
-                            .textFieldStyle(.roundedBorder)
+                            TextField("Action Label", text: Binding(get: { viewModel.newKeymapLabel }, set: { viewModel.newKeymapLabel = $0 }))
+                                .textFieldStyle(.roundedBorder)
 
-                        Picker("Type", selection: Binding(get: { viewModel.newKeymapActionType }, set: { viewModel.newKeymapActionType = $0 })) {
-                            ForEach(KeyActionType.allCases, id: \.self) { t in
-                                Text(t.rawValue).tag(t)
+                            Picker("", selection: Binding(get: { viewModel.newKeymapActionType }, set: { viewModel.newKeymapActionType = $0 })) {
+                                ForEach(KeyActionType.allCases, id: \.self) { t in
+                                    Text(t.rawValue).tag(t)
+                                }
+                            }
+                            .frame(width: 130)
+
+                            addMappingButton
+                        }
+
+                        VStack(spacing: 8) {
+                            HStack(spacing: 8) {
+                                TextField("Key (e.g. F)", text: Binding(get: { viewModel.newKeymapInputKey }, set: { viewModel.newKeymapInputKey = $0 }))
+                                    .textFieldStyle(.roundedBorder)
+                                    .frame(width: 90)
+
+                                TextField("Action Label", text: Binding(get: { viewModel.newKeymapLabel }, set: { viewModel.newKeymapLabel = $0 }))
+                                    .textFieldStyle(.roundedBorder)
+                            }
+
+                            HStack(spacing: 8) {
+                                Picker("", selection: Binding(get: { viewModel.newKeymapActionType }, set: { viewModel.newKeymapActionType = $0 })) {
+                                    ForEach(KeyActionType.allCases, id: \.self) { t in
+                                        Text(t.rawValue).tag(t)
+                                    }
+                                }
+                                Spacer()
+                                addMappingButton
                             }
                         }
-                        .frame(width: 140)
-
-                        Button("Add Mapping") {
-                            guard !viewModel.newKeymapInputKey.isEmpty, !viewModel.newKeymapLabel.isEmpty else { return }
-                            let mapping = KeyMapping(
-                                key: viewModel.newKeymapInputKey.trimmingCharacters(in: .whitespaces).uppercased(),
-                                actionType: viewModel.newKeymapActionType,
-                                xPercent: viewModel.newKeymapXPercent,
-                                yPercent: viewModel.newKeymapYPercent,
-                                androidKeycode: viewModel.newKeymapCode,
-                                label: viewModel.newKeymapLabel
-                            )
-                            viewModel.addKeyMapping(mapping)
-                            viewModel.newKeymapInputKey = ""
-                            viewModel.newKeymapLabel = ""
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.small)
                     }
 
                     if viewModel.newKeymapActionType == .tapCoordinate {
-                        HStack(spacing: 16) {
-                            Text("Screen Position: X: \(Int(viewModel.newKeymapXPercent * 100))%  Y: \(Int(viewModel.newKeymapYPercent * 100))%")
+                        HStack(spacing: 12) {
+                            Text("Position: X: \(Int(viewModel.newKeymapXPercent * 100))%  Y: \(Int(viewModel.newKeymapYPercent * 100))%")
                                 .font(.system(size: 11))
                                 .foregroundColor(.secondary)
                             Slider(value: Binding(get: { viewModel.newKeymapXPercent }, set: { viewModel.newKeymapXPercent = $0 }), in: 0...1)
@@ -267,11 +273,31 @@ public struct GameKeymapperView: View {
                         }
                     }
                 }
-                .padding()
+                .padding(12)
                 .background(Color(NSColor.controlBackgroundColor).opacity(0.6))
-                .cornerRadius(10)
+                .cornerRadius(8)
             }
-            .padding()
+            .padding(14)
         }
+    }
+
+    @ViewBuilder
+    private var addMappingButton: some View {
+        Button("Add Mapping") {
+            guard !viewModel.newKeymapInputKey.isEmpty, !viewModel.newKeymapLabel.isEmpty else { return }
+            let mapping = KeyMapping(
+                key: viewModel.newKeymapInputKey.trimmingCharacters(in: .whitespaces).uppercased(),
+                actionType: viewModel.newKeymapActionType,
+                xPercent: viewModel.newKeymapXPercent,
+                yPercent: viewModel.newKeymapYPercent,
+                androidKeycode: viewModel.newKeymapCode,
+                label: viewModel.newKeymapLabel
+            )
+            viewModel.addKeyMapping(mapping)
+            viewModel.newKeymapInputKey = ""
+            viewModel.newKeymapLabel = ""
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.small)
     }
 }

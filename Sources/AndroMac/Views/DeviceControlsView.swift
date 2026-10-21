@@ -5,13 +5,13 @@ public struct DeviceControlsView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 18) {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Device Controls & Input Forwarding")
+                    Text("Device Controls")
                         .font(.system(size: 20, weight: .bold))
-                    Text("Send navigation commands, system shortcuts, and text input to the Android Tablet.")
-                        .font(.system(size: 13))
+                    Text("System navigation, shortcuts, and input forwarding.")
+                        .font(.system(size: 12))
                         .foregroundColor(.secondary)
                 }
 
@@ -19,29 +19,29 @@ public struct DeviceControlsView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.orange)
-                        Text("Android is currently offline. Start Android to send controls.")
+                        Text("Android is offline. Start Android to send controls.")
                             .font(.system(size: 12))
                     }
-                    .padding()
+                    .padding(10)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.orange.opacity(0.1))
                     .cornerRadius(8)
                 }
 
                 // Laptop & Multi-Window Mode Controls
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text("Laptop & Multi-Window Management")
-                            .font(.system(size: 14, weight: .semibold))
+                        Text("Laptop & Multi-Window")
+                            .font(.system(size: 13, weight: .semibold))
                         Spacer()
-                        Text(viewModel.config.deviceMode == .laptop ? "Desktop Mode Active" : "Tablet Mode Active")
-                            .font(.system(size: 11, weight: .semibold))
+                        Text(viewModel.config.deviceMode == .laptop ? "Desktop Mode" : "Tablet Mode")
+                            .font(.system(size: 11, weight: .medium))
                             .foregroundColor(viewModel.config.deviceMode == .laptop ? .accentColor : .secondary)
                     }
 
-                    HStack(spacing: 14) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 105), spacing: 8)], spacing: 8) {
                         ControlButton(
-                            title: viewModel.config.deviceMode == .laptop ? "Switch to Tablet" : "Switch to Laptop",
+                            title: viewModel.config.deviceMode == .laptop ? "Tablet Mode" : "Laptop Mode",
                             icon: viewModel.config.deviceMode == .laptop ? "ipad.landscape" : "laptopcomputer",
                             color: .orange
                         ) {
@@ -49,7 +49,7 @@ public struct DeviceControlsView: View {
                         }
 
                         ControlButton(
-                            title: "Enable Freeform Windows",
+                            title: "Freeform Windows",
                             icon: "uiwindow.split.2x1",
                             color: .indigo
                         ) {
@@ -57,53 +57,45 @@ public struct DeviceControlsView: View {
                         }
 
                         ControlButton(
-                            title: "Taskbar / App Switcher",
+                            title: "App Switcher",
                             icon: "macwindow.on.rectangle",
                             color: .purple
                         ) {
                             viewModel.sendRecents()
                         }
+
                         ControlButton(
-                            title: "Pure Window (No Sidebar)",
+                            title: "Pure Window",
                             icon: "sparkles",
                             color: .indigo
                         ) {
                             viewModel.launchCleanScrcpyWindow()
                         }
+
                         ControlButton(
-                            title: "Full-Screen Mode",
+                            title: "Full-Screen",
                             icon: "arrow.up.left.and.arrow.down.right",
                             color: .green
                         ) {
                             viewModel.toggleFullScreen()
                         }
                     }
-
-                    HStack(spacing: 6) {
-                        Image(systemName: "sparkles")
-                            .foregroundColor(.accentColor)
-                            .font(.system(size: 11))
-                        Text("Use 'Pure Window' to display Android via scrcpy with 0 sidebars, full keyboard/mouse integration and native macOS window controls.")
-                            .font(.system(size: 11))
-                            .foregroundColor(.secondary)
-                    }
-                    .padding(.top, 2)
                 }
                 .disabled(!viewModel.state.isRunning)
 
                 // Android Navigation Bar
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("System Navigation")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
 
-                    HStack(spacing: 14) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 105), spacing: 8)], spacing: 8) {
                         ControlButton(title: "Back", icon: "arrow.backward.circle.fill", color: .blue) {
                             viewModel.sendBack()
                         }
                         ControlButton(title: "Home", icon: "circle.circle.fill", color: .blue) {
                             viewModel.sendHome()
                         }
-                        ControlButton(title: "Recents / Taskbar", icon: "square.fill.on.square.fill", color: .blue) {
+                        ControlButton(title: "Recents", icon: "square.fill.on.square.fill", color: .blue) {
                             viewModel.sendRecents()
                         }
                         ControlButton(title: "Notifications", icon: "bell.badge.fill", color: .purple) {
@@ -117,21 +109,21 @@ public struct DeviceControlsView: View {
                 .disabled(!viewModel.state.isRunning)
 
                 // Audio & Display
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Audio & Orientation")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
 
-                    HStack(spacing: 14) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 105), spacing: 8)], spacing: 8) {
                         ControlButton(title: "Volume Up", icon: "speaker.wave.3.fill", color: .teal) {
                             viewModel.sendVolumeUp()
                         }
                         ControlButton(title: "Volume Down", icon: "speaker.wave.1.fill", color: .teal) {
                             viewModel.sendVolumeDown()
                         }
-                        ControlButton(title: "Force Landscape (16:10)", icon: "ipad.landscape", color: .indigo) {
+                        ControlButton(title: "Landscape", icon: "ipad.landscape", color: .indigo) {
                             viewModel.setOrientation(landscape: true)
                         }
-                        ControlButton(title: "Rotate Portrait", icon: "ipad", color: .indigo) {
+                        ControlButton(title: "Portrait", icon: "ipad", color: .indigo) {
                             viewModel.setOrientation(landscape: false)
                         }
                     }
@@ -139,12 +131,12 @@ public struct DeviceControlsView: View {
                 .disabled(!viewModel.state.isRunning)
 
                 // Bidirectional Clipboard Sync
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Text("Bidirectional Clipboard Sync")
-                            .font(.system(size: 14, weight: .semibold))
+                        Text("Clipboard Sync")
+                            .font(.system(size: 13, weight: .semibold))
                         Spacer()
-                        Toggle("Auto-Sync (Bidirectional)", isOn: Binding(
+                        Toggle("Auto-Sync", isOn: Binding(
                             get: { viewModel.isClipboardSyncEnabled },
                             set: { viewModel.toggleClipboardSync(enabled: $0) }
                         ))
@@ -154,37 +146,55 @@ public struct DeviceControlsView: View {
                     }
 
                     VStack(alignment: .leading, spacing: 10) {
-                        HStack(spacing: 12) {
-                            Button(action: { viewModel.pushClipboardToAndroid() }) {
-                                Label("Push Mac ➔ Android", systemImage: "arrow.right.doc.on.clipboard")
+                        ViewThatFits(in: .horizontal) {
+                            HStack(spacing: 8) {
+                                Button(action: { viewModel.pushClipboardToAndroid() }) {
+                                    Label("Push to Android", systemImage: "arrow.right.doc.on.clipboard")
+                                        .lineLimit(1)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .controlSize(.small)
+                                .disabled(!viewModel.state.isRunning)
+
+                                Button(action: { viewModel.pullClipboardFromAndroid() }) {
+                                    Label("Pull to Mac", systemImage: "arrow.left.doc.on.clipboard")
+                                        .lineLimit(1)
+                                }
+                                .buttonStyle(.bordered)
+                                .controlSize(.small)
+                                .disabled(!viewModel.state.isRunning)
+
+                                Spacer()
+
+                                clipboardStatusIndicator
                             }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(.small)
-                            .disabled(!viewModel.state.isRunning)
 
-                            Button(action: { viewModel.pullClipboardFromAndroid() }) {
-                                Label("Pull Android ➔ Mac", systemImage: "arrow.left.doc.on.clipboard")
-                            }
-                            .buttonStyle(.bordered)
-                            .controlSize(.small)
-                            .disabled(!viewModel.state.isRunning)
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(spacing: 8) {
+                                    Button(action: { viewModel.pushClipboardToAndroid() }) {
+                                        Label("Push to Android", systemImage: "arrow.right.doc.on.clipboard")
+                                            .lineLimit(1)
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .controlSize(.small)
+                                    .disabled(!viewModel.state.isRunning)
 
-                            Spacer()
-
-                            HStack(spacing: 6) {
-                                Circle()
-                                    .fill(viewModel.isClipboardSyncEnabled ? Color.green : Color.secondary)
-                                    .frame(width: 7, height: 7)
-                                Text(viewModel.lastClipboardEvent)
-                                    .font(.system(size: 11, design: .monospaced))
-                                    .foregroundColor(.secondary)
+                                    Button(action: { viewModel.pullClipboardFromAndroid() }) {
+                                        Label("Pull to Mac", systemImage: "arrow.left.doc.on.clipboard")
+                                            .lineLimit(1)
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .controlSize(.small)
+                                    .disabled(!viewModel.state.isRunning)
+                                }
+                                clipboardStatusIndicator
                             }
                         }
 
                         Divider()
 
-                        HStack {
-                            TextField("Direct typing into focused Android field...", text: Binding(get: { viewModel.customTextInput }, set: { viewModel.customTextInput = $0 }))
+                        HStack(spacing: 8) {
+                            TextField("Type directly into focused Android field...", text: Binding(get: { viewModel.customTextInput }, set: { viewModel.customTextInput = $0 }))
                                 .textFieldStyle(.roundedBorder)
 
                             Button("Send Text") {
@@ -197,36 +207,55 @@ public struct DeviceControlsView: View {
                                 viewModel.customTextInput = ""
                             }
                             .buttonStyle(.bordered)
+                            .controlSize(.small)
                             .disabled(!viewModel.state.isRunning || viewModel.customTextInput.isEmpty)
                         }
                     }
-                    .padding()
+                    .padding(12)
                     .background(Color(NSColor.controlBackgroundColor))
-                    .cornerRadius(10)
+                    .cornerRadius(8)
                 }
 
-                // Full-Screen Focus
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("macOS Window & Full-Screen Management")
-                        .font(.system(size: 14, weight: .semibold))
+                // Window & Full-Screen Management
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Window Management")
+                        .font(.system(size: 13, weight: .semibold))
 
-                    HStack(spacing: 12) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 8)], spacing: 8) {
                         Button(action: { viewModel.toggleFullScreen() }) {
-                            Label("Toggle Native Full-Screen (Control + Command + F)", systemImage: "arrow.up.left.and.arrow.down.right")
+                            Label("Toggle Full-Screen", systemImage: "arrow.up.left.and.arrow.down.right")
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
                         .controlSize(.regular)
                         .disabled(!viewModel.state.isRunning)
 
                         Button(action: { FullScreenCoordinator.shared.focusEmulatorWindow() }) {
-                            Label("Bring Android to Front", systemImage: "macwindow.on.rectangle")
+                            Label("Bring to Front", systemImage: "macwindow.on.rectangle")
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.bordered)
+                        .controlSize(.regular)
                         .disabled(!viewModel.state.isRunning)
                     }
                 }
             }
-            .padding()
+            .padding(14)
+        }
+    }
+
+    @ViewBuilder
+    private var clipboardStatusIndicator: some View {
+        HStack(spacing: 6) {
+            Circle()
+                .fill(viewModel.isClipboardSyncEnabled ? Color.green : Color.secondary)
+                .frame(width: 6, height: 6)
+            Text(viewModel.lastClipboardEvent)
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundColor(.secondary)
+                .lineLimit(1)
         }
     }
 }
@@ -239,16 +268,18 @@ private struct ControlButton: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
+            VStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 20))
+                    .font(.system(size: 18))
                     .foregroundColor(color)
                 Text(title)
                     .font(.system(size: 11, weight: .medium))
-                    .lineLimit(1)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.85)
             }
-            .frame(minWidth: 100, minHeight: 60)
-            .padding(8)
+            .frame(maxWidth: .infinity, minHeight: 56)
+            .padding(6)
             .background(Color(NSColor.controlBackgroundColor))
             .cornerRadius(8)
             .overlay(

@@ -12,7 +12,7 @@ public struct ContentView: View {
                 }
             }
             .listStyle(.sidebar)
-            .navigationSplitViewColumnWidth(min: 220, ideal: 240, max: 280)
+            .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 260)
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button(action: { viewModel.refreshEnvironment() }) {
@@ -22,15 +22,16 @@ public struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                VStack(spacing: 6) {
+                VStack(spacing: 0) {
                     Divider()
-                    HStack {
+                    HStack(spacing: 8) {
                         Circle()
                             .fill(viewModel.state.statusColor)
                             .frame(width: 8, height: 8)
                         Text(viewModel.state.statusTitle)
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
+                            .lineLimit(1)
                         Spacer()
                     }
                     .padding(.horizontal, 12)
@@ -61,7 +62,7 @@ public struct ContentView: View {
                 LogsView(viewModel: viewModel)
             }
         }
-        .frame(minWidth: 960, minHeight: 680)
+        .frame(minWidth: 760, minHeight: 520)
         .alert(isPresented: $viewModel.showAlert) {
             Alert(
                 title: Text("AndroMac"),

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026-10-21
+
+### Fixed
+- **Restore 100% Native Retina GPU Sharpness**: Defaulted display mode back to Native Direct Metal GPU rendering (`useScrcpyWindow = false`), eliminating all video compression artifacts, fuzzy fonts, and low-bitrate blurriness.
+- **Display Engine Flexibility**: Made `scrcpy` borderless engine an optional toggle in Display Settings for users who want zero sidebars, while preserving 100% pixel-perfect Retina clarity on the default native engine.
+
 ## [1.4.1] - 2026-10-21
 
 ### Fixed

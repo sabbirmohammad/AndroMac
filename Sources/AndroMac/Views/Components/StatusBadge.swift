@@ -8,10 +8,10 @@ public struct StatusBadge: View {
     }
 
     public var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             Circle()
                 .fill(state.statusColor)
-                .frame(width: 10, height: 10)
+                .frame(width: 8, height: 8)
                 .overlay(
                     Circle()
                         .stroke(state.statusColor.opacity(0.4), lineWidth: state.isTransitioning ? 3 : 0)
@@ -19,20 +19,17 @@ public struct StatusBadge: View {
                         .animation(state.isTransitioning ? .easeInOut(duration: 0.8).repeatForever(autoreverses: true) : .default, value: state.isTransitioning)
                 )
 
-            VStack(alignment: .leading, spacing: 1) {
-                Text(state.statusTitle)
-                    .font(.system(size: 13, weight: .semibold))
-                Text(state.statusTitleBn)
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
-            }
+            Text(state.statusTitle)
+                .font(.system(size: 11, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
         .background(state.statusColor.opacity(0.12))
-        .cornerRadius(12)
+        .cornerRadius(6)
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 6)
                 .stroke(state.statusColor.opacity(0.3), lineWidth: 1)
         )
     }

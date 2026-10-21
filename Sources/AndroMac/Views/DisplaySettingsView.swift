@@ -5,13 +5,13 @@ public struct DisplaySettingsView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 22) {
+            VStack(alignment: .leading, spacing: 18) {
                 // Header
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Display & Device Mode Settings")
+                    Text("Display & Hardware")
                         .font(.system(size: 20, weight: .bold))
-                    Text("Choose between Mac-optimized Laptop/Desktop Mode and Classic Tablet Mode, customize resolution, DPI, and virtual hardware.")
-                        .font(.system(size: 13))
+                    Text("Configure device mode, resolution, DPI, and resources.")
+                        .font(.system(size: 12))
                         .foregroundColor(.secondary)
                 }
 
@@ -19,30 +19,30 @@ public struct DisplaySettingsView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         Text("Operating Mode")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.system(size: 13, weight: .semibold))
                         Spacer()
                         Text("Current: \(viewModel.config.deviceMode.shortName)")
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(.secondary)
                     }
 
-                    VStack(spacing: 10) {
+                    VStack(spacing: 8) {
                         ForEach(DeviceMode.allCases, id: \.self) { mode in
                             let isSelected = viewModel.config.deviceMode == mode
-                            HStack(alignment: .top, spacing: 14) {
+                            HStack(alignment: .top, spacing: 12) {
                                 Image(systemName: mode.icon)
-                                    .font(.system(size: 22))
+                                    .font(.system(size: 20))
                                     .foregroundColor(isSelected ? .accentColor : .secondary)
-                                    .frame(width: 30)
+                                    .frame(width: 26)
 
-                                VStack(alignment: .leading, spacing: 3) {
+                                VStack(alignment: .leading, spacing: 2) {
                                     HStack {
                                         Text(mode.displayName)
                                             .font(.system(size: 13, weight: .semibold))
                                         if mode == .laptop {
                                             Text("Mac Optimized")
-                                                .font(.system(size: 10, weight: .bold))
-                                                .padding(.horizontal, 6)
+                                                .font(.system(size: 9, weight: .bold))
+                                                .padding(.horizontal, 5)
                                                 .padding(.vertical, 2)
                                                 .background(Color.accentColor.opacity(0.15))
                                                 .foregroundColor(.accentColor)
@@ -63,11 +63,11 @@ public struct DisplaySettingsView: View {
                                         .foregroundColor(.accentColor)
                                 }
                             }
-                            .padding(12)
+                            .padding(10)
                             .background(Color(NSColor.controlBackgroundColor))
-                            .cornerRadius(10)
+                            .cornerRadius(8)
                             .overlay(
-                                RoundedRectangle(cornerRadius: 10)
+                                RoundedRectangle(cornerRadius: 8)
                                     .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 1.5)
                             )
                             .contentShape(Rectangle())
@@ -81,18 +81,18 @@ public struct DisplaySettingsView: View {
                 // 2. Laptop / Freeform Windowing Options (if Laptop Mode is active)
                 if viewModel.config.deviceMode == .laptop {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Laptop Multi-Windowing & Desktop Features")
-                            .font(.system(size: 14, weight: .semibold))
+                        Text("Laptop Multi-Windowing")
+                            .font(.system(size: 13, weight: .semibold))
 
-                        VStack(spacing: 10) {
+                        VStack(spacing: 8) {
                             Toggle(isOn: Binding(
                                 get: { viewModel.config.enableFreeformWindows },
                                 set: { viewModel.toggleDesktopMode(enabled: $0) }
                             )) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("Freeform Floating Multi-Windowing")
-                                        .font(.system(size: 13, weight: .medium))
-                                    Text("Allows opening multiple resizable Android apps simultaneously with window controls.")
+                                    Text("Freeform Multi-Windowing")
+                                        .font(.system(size: 12, weight: .medium))
+                                    Text("Open multiple resizable Android apps simultaneously.")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }
@@ -110,8 +110,8 @@ public struct DisplaySettingsView: View {
                             )) {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Force Resizable Activities")
-                                        .font(.system(size: 13, weight: .medium))
-                                    Text("Forces non-responsive phone apps to support floating and split window resizing.")
+                                        .font(.system(size: 12, weight: .medium))
+                                    Text("Allow non-responsive apps to resize in freeform mode.")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }
@@ -128,18 +128,18 @@ public struct DisplaySettingsView: View {
                                 }
                             )) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    HStack {
-                                        Text("Pure Display Engine (scrcpy Integration)")
-                                            .font(.system(size: 13, weight: .medium))
-                                        Text("Recommended")
+                                    HStack(spacing: 6) {
+                                        Text("Pure Borderless Window (scrcpy Engine)")
+                                            .font(.system(size: 12, weight: .medium))
+                                        Text("Optional")
                                             .font(.system(size: 9, weight: .bold))
                                             .padding(.horizontal, 5)
                                             .padding(.vertical, 1)
-                                            .background(Color.green.opacity(0.15))
-                                            .foregroundColor(.green)
+                                            .background(Color.secondary.opacity(0.15))
+                                            .foregroundColor(.secondary)
                                             .cornerRadius(3)
                                     }
-                                    Text("Replaces Google's cluttered emulator window with a 100% clean, native macOS window with zero sidebars, high refresh rates, and native Mac full-screen.")
+                                    Text("Replaces emulator window with a borderless window. Leave OFF for Native Metal GPU 100% pixel-perfect Retina clarity.")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }
@@ -156,45 +156,37 @@ public struct DisplaySettingsView: View {
                                 }
                             )) {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text("Auto Full-Screen on Launch")
-                                        .font(.system(size: 13, weight: .medium))
-                                    Text("Automatically expands the display window to borderless full-screen.")
+                                    Text("Auto Full-Screen")
+                                        .font(.system(size: 12, weight: .medium))
+                                    Text("Automatically expand display window to full-screen on launch.")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }
                             }
                             .toggleStyle(.switch)
-
-                            HStack(alignment: .top, spacing: 8) {
-                                Image(systemName: "info.circle.fill")
-                                    .foregroundColor(.accentColor)
-                                    .font(.system(size: 13))
-                                Text("Pro Tip: To collapse the floating side controller in windowed mode, click the '-' (minimize) icon at the top-right of the side toolbar, or press Ctrl+Cmd+F.")
-                                    .font(.system(size: 11))
-                                    .foregroundColor(.secondary)
-                            }
-                            .padding(.top, 4)
                         }
-                        .padding()
+                        .padding(12)
                         .background(Color(NSColor.controlBackgroundColor))
-                        .cornerRadius(10)
+                        .cornerRadius(8)
                     }
                 }
 
                 // 3. Resolution Presets
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Screen Resolution")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         ForEach(ResolutionPreset.presets) { preset in
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(preset.name)
-                                        .font(.system(size: 13, weight: .medium))
+                                        .font(.system(size: 12, weight: .medium))
                                     Text("\(preset.width) × \(preset.height) (\(preset.aspectRatio)) — \(preset.description)")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.85)
                                 }
                                 Spacer()
                                 if viewModel.config.width == preset.width && viewModel.config.height == preset.height {
@@ -202,9 +194,9 @@ public struct DisplaySettingsView: View {
                                         .foregroundColor(.accentColor)
                                 }
                             }
-                            .padding(10)
+                            .padding(8)
                             .background(Color(NSColor.controlBackgroundColor))
-                            .cornerRadius(8)
+                            .cornerRadius(6)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 viewModel.config.width = preset.width
@@ -224,18 +216,20 @@ public struct DisplaySettingsView: View {
 
                 // 4. Density (DPI) Selection
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Screen Density (DPI Scale)")
-                        .font(.system(size: 14, weight: .semibold))
+                    Text("Screen Density (DPI)")
+                        .font(.system(size: 13, weight: .semibold))
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 6) {
                         ForEach(DensityPreset.presets) { preset in
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(preset.name)
-                                        .font(.system(size: 13, weight: .medium))
+                                        .font(.system(size: 12, weight: .medium))
                                     Text(preset.description)
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.85)
                                 }
                                 Spacer()
                                 if viewModel.config.density == preset.dpi {
@@ -243,9 +237,9 @@ public struct DisplaySettingsView: View {
                                         .foregroundColor(.accentColor)
                                 }
                             }
-                            .padding(10)
+                            .padding(8)
                             .background(Color(NSColor.controlBackgroundColor))
-                            .cornerRadius(8)
+                            .cornerRadius(6)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 viewModel.config.density = preset.dpi
@@ -261,83 +255,94 @@ public struct DisplaySettingsView: View {
                     }
                 }
 
-                // 5. Performance & Virtual Hardware
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Virtual Hardware Allocation")
-                        .font(.system(size: 14, weight: .semibold))
+                // 5. Virtual Hardware Allocation
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Hardware Allocation")
+                        .font(.system(size: 13, weight: .semibold))
 
-                    Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 12) {
-                        GridRow {
-                            Text("RAM Size:")
-                                .font(.system(size: 13))
+                    VStack(spacing: 10) {
+                        hardwareRow(title: "RAM Size:") {
                             Picker("", selection: Binding(get: { viewModel.config.ramMB }, set: { viewModel.config.ramMB = $0 })) {
                                 Text("2048 MB (2 GB)").tag(2048)
-                                Text("3072 MB (3 GB - Recommended)").tag(3072)
+                                Text("3072 MB (3 GB)").tag(3072)
                                 Text("4096 MB (4 GB)").tag(4096)
                                 Text("6144 MB (6 GB)").tag(6144)
                             }
                             .labelsHidden()
                         }
 
-                        GridRow {
-                            Text("CPU Cores:")
-                                .font(.system(size: 13))
+                        hardwareRow(title: "CPU Cores:") {
                             Picker("", selection: Binding(get: { viewModel.config.cpuCores }, set: { viewModel.config.cpuCores = $0 })) {
                                 Text("2 Cores").tag(2)
-                                Text("4 Cores (Recommended)").tag(4)
+                                Text("4 Cores").tag(4)
                                 Text("6 Cores").tag(6)
                             }
                             .labelsHidden()
                         }
 
-                        GridRow {
-                            Text("Internal Storage:")
-                                .font(.system(size: 13))
+                        hardwareRow(title: "Storage:") {
                             Picker("", selection: Binding(get: { viewModel.config.storageGB }, set: { viewModel.config.storageGB = $0 })) {
                                 Text("6 GB").tag(6)
-                                Text("8 GB (Recommended)").tag(8)
+                                Text("8 GB").tag(8)
                                 Text("12 GB").tag(12)
                                 Text("16 GB").tag(16)
                             }
                             .labelsHidden()
                         }
 
-                        GridRow {
-                            Text("Boot Type:")
-                                .font(.system(size: 13))
+                        hardwareRow(title: "Boot Type:") {
                             Picker("", selection: Binding(get: { viewModel.config.coldBoot }, set: { viewModel.config.coldBoot = $0 })) {
-                                Text("Fast Boot (Snapshot Resume)").tag(false)
-                                Text("Cold Boot (Full Fresh Boot)").tag(true)
+                                Text("Fast Boot (Snapshot)").tag(false)
+                                Text("Cold Boot (Fresh)").tag(true)
                             }
                             .labelsHidden()
                         }
                     }
-                    .padding()
+                    .padding(12)
                     .background(Color(NSColor.controlBackgroundColor))
-                    .cornerRadius(10)
+                    .cornerRadius(8)
                 }
 
                 // Actions: Save & Wipe Data
-                HStack(spacing: 12) {
-                    Button("Save Configuration & Update AVD") {
-                        viewModel.applyConfigAndReconfigure(notify: true)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.regular)
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) {
+                        Button("Save Configuration") {
+                            viewModel.applyConfigAndReconfigure(notify: true)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.regular)
 
-                    Spacer()
+                        Spacer()
 
-                    Button(role: .destructive) {
-                        viewModel.showWipeConfirm = true
-                    } label: {
-                        Label("Wipe Data / Factory Reset", systemImage: "trash.fill")
+                        Button(role: .destructive) {
+                            viewModel.showWipeConfirm = true
+                        } label: {
+                            Label("Wipe Data", systemImage: "trash.fill")
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.regular)
+                        .disabled(viewModel.state.isRunning)
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(.regular)
-                    .disabled(viewModel.state.isRunning)
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Button("Save Configuration") {
+                            viewModel.applyConfigAndReconfigure(notify: true)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.regular)
+
+                        Button(role: .destructive) {
+                            viewModel.showWipeConfirm = true
+                        } label: {
+                            Label("Wipe Data", systemImage: "trash.fill")
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.regular)
+                        .disabled(viewModel.state.isRunning)
+                    }
                 }
             }
-            .padding()
+            .padding(14)
         }
         .confirmationDialog(
             "Are you sure you want to Wipe Data?",
@@ -349,7 +354,17 @@ public struct DisplaySettingsView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("This will delete all installed apps, settings, and user data. Official system files and Play Store will remain intact.")
+            Text("This will delete all installed apps, settings, and user data.")
+        }
+    }
+
+    @ViewBuilder
+    private func hardwareRow<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+            Spacer()
+            content()
         }
     }
 }

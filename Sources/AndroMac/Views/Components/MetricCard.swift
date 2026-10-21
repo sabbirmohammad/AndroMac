@@ -16,32 +16,36 @@ public struct MetricCard: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(iconColor)
                 Spacer()
                 Text(title)
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
             }
 
             Text(value)
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 16, weight: .bold))
                 .lineLimit(1)
+                .minimumScaleFactor(0.8)
 
             Text(subtitle)
-                .font(.system(size: 11))
+                .font(.system(size: 10))
                 .foregroundColor(.secondary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
-        .padding(12)
-        .frame(minWidth: 140, maxWidth: .infinity)
+        .padding(10)
+        .frame(minWidth: 120, maxWidth: .infinity, alignment: .leading)
         .background(Color(NSColor.controlBackgroundColor))
-        .cornerRadius(10)
+        .cornerRadius(8)
         .overlay(
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 8)
                 .stroke(Color.primary.opacity(0.08), lineWidth: 1)
         )
     }
@@ -76,31 +80,36 @@ public struct ActionButton: View {
 
     public var body: some View {
         Button(action: action) {
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 if isLoading {
                     ProgressView()
-                        .scaleEffect(0.8)
-                        .frame(width: 16, height: 16)
+                        .scaleEffect(0.7)
+                        .frame(width: 14, height: 14)
                 } else {
                     Image(systemName: icon)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                 }
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(.system(size: 13, weight: .semibold))
-                    if let sub = subtitle {
+                        .font(.system(size: 12, weight: .semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
+                    if let sub = subtitle, !sub.isEmpty {
                         Text(sub)
-                            .font(.system(size: 10))
+                            .font(.system(size: 9))
                             .opacity(0.8)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
                 }
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .frame(minHeight: 30)
             .foregroundColor(.white)
             .background(isDisabled ? Color.gray : color)
-            .cornerRadius(8)
+            .cornerRadius(6)
         }
         .buttonStyle(.plain)
         .disabled(isDisabled || isLoading)
